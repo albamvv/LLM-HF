@@ -236,9 +236,6 @@ python 2.LLM_traslate.py
 ```
 This will print translated text for the given Chinese input.
 
-## Conclusion
-This script demonstrates multiple ways to perform machine translation using pretrained models, providing flexibility in implementation.
-
 
 
 # 3️⃣ LLM Text tokenization
@@ -274,39 +271,61 @@ import torch
 The script uses the `transformers` library from Hugging Face to handle tokenization and model loading.
 
 ### 2. Load the Pretrained GPT-2 Tokenizer and Model
+- This loads the GPT-2 tokenizer and the corresponding language model.
+
 ```python
 tokenizer = AutoTokenizer.from_pretrained("gpt2")  
 gpt2 = AutoModelForCausalLM.from_pretrained("gpt2")
 ```
-This loads the GPT-2 tokenizer and the corresponding language model.
+- This defines the input text that will be tokenized and processed by the model.
 
-### 3. Define Input Sentence
+
 ```python
 sentence = "The future of AI is"
 ```
-This defines the input text that will be tokenized and processed by the model.
 
-### 4. Tokenize the Input
+### 3. Tokenize the Input
+- Tokenize the sentence and convert it into tensor format (PyTorch). 
+- Each word or subword is mapped to a specific token ID
+- The process: words --> tokens --> unique token IDs --> vector embed
+
 ```python
 input_ids = tokenizer(sentence, return_tensors='pt').input_ids  
 ```
 This converts the sentence into token IDs, which are then passed as input tensors.
 
-### 5. Model Prediction
+```sh
+input_id:  tensor([[ 464, 2003,  286, 9552,  318]])
+```
+-  Loop through each token ID in the tensor and decode it back to a string
+
+```python
+for token_id in input_ids[0]:  
+    print(tokenizer.decode(token_id))  # Print the corresponding token  
+```
+
+```sh
+The    
+ future
+ of    
+ AI    
+ is 
+```
+### 4. Model Prediction
 ```python
 output = gpt2(input_ids)  
 final_logits = output.logits[0, -1]
 ```
 The model generates logits, which represent unprocessed probabilities for the next possible tokens.
 
-### 6. Determine the Most Likely Next Token
+### 5. Determine the Most Likely Next Token
 ```python
 next_token = tokenizer.decode(final_logits.argmax())
 print("Next token prediction:", next_token)
 ```
 This extracts and decodes the most probable next token predicted by the model.
 
-### 7. Generate the Top 10 Predictions
+### 6. Generate the Top 10 Predictions
 ```python
 top10 = torch.topk(final_logits.softmax(dim=0), 10)
 for value, index in zip(top10.values, top10.indices):

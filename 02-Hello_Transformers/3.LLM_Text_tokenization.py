@@ -1,21 +1,18 @@
 from transformers import AutoTokenizer,AutoModelForCausalLM, pipeline
+import torch
+
 
 
 # Load the GPT-2 tokenizer and the GPT-2 language model
 tokenizer = AutoTokenizer.from_pretrained("gpt2")  
 gpt2 = AutoModelForCausalLM.from_pretrained("gpt2") # Este modelo es autoregresivo, lo que significa que puede predecir el siguiente token basado en el contexto anterior
-
 sentence = "The future of AI is" # Define the input sentence
-
-# Tokenize the sentence and convert it into tensor format (PyTorch)
-# The process: words --> tokens --> unique token IDs --> vector embed
-# Each word or subword is mapped to a specific token ID
-input_ids = tokenizer(sentence, return_tensors='pt').input_ids  
-#print('input_id: ', input_ids)  
+input_ids = tokenizer(sentence, return_tensors='pt').input_ids  # Tokenize the sentence and convert it into tensor format (PyTorch).
+print('input_id: ', input_ids)  
 
 # Loop through each token ID in the tensor and decode it back to a string
-#for token_id in input_ids[0]:  
-#    print(tokenizer.decode(token_id))  # Print the corresponding token  
+for token_id in input_ids[0]:  
+    print(tokenizer.decode(token_id))  # Print the corresponding token  
 
 # Pass the tokenized input to the model to obtain output logits, Devuelve logits con las probabilidades de cada token.
 output = gpt2(input_ids)  
