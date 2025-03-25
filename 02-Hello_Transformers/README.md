@@ -1,0 +1,116 @@
+# README
+
+## HF Transformers Implementation
+
+This project demonstrates various Natural Language Processing (NLP) and Image Processing tasks using Hugging Face Transformers. It includes text classification, named entity recognition, question answering, text summarization, translation, text generation, and image classification.
+
+---
+
+## Installation
+Ensure you have Python installed along with the required libraries:
+
+```sh
+pip install transformers pandas pillow requests
+```
+
+---
+
+## Implementation Details
+
+### 1. Text Classification
+Classifies text sentiment using a pre-trained model.
+```python
+from transformers import pipeline
+import pandas as pd
+
+classifier = pipeline("text-classification", model="SamLowe/roberta-base-go_emotions")
+text = "wow! we have come across this far"
+outputs = classifier(text)
+print("result-> ", pd.DataFrame(outputs))
+```
+**Expected Output:**
+A dataframe with the predicted emotion label and confidence score.
+
+---
+
+### 2. Named Entity Recognition (NER)
+Extracts key phrases from a given text.
+```python
+ner_tagger = pipeline("ner", aggregation_strategy="simple", model="ml6team/keyphrase-extraction-kbir-inspec")
+text = "Keyphrase extraction is a technique in text analysis where you extract the important keyphrases from a document."
+outputs = ner_tagger(text)
+print("result-> ", pd.DataFrame(outputs))
+```
+**Expected Output:**
+A dataframe listing extracted keyphrases and their scores.
+
+---
+
+### 3. Question Answering
+Extracts answers from a given context.
+```python
+reader = pipeline("question-answering")
+text = "Dear Amazon, last week I ordered an Optimus Prime action figure from your online store in India."
+question = "from where did I place order?"
+outputs = reader(question=question, context=text)
+print("result-> ", pd.DataFrame([outputs]))
+```
+**Expected Output:**
+A dataframe with the extracted answer ("India") and confidence score.
+
+---
+
+### 4. Text Summarization
+Summarizes a given text.
+```python
+summarizer = pipeline("summarization")
+outputs = summarizer(text)
+print("summarize-> ", outputs)
+```
+**Expected Output:**
+A summarized version of the input text.
+
+---
+
+### 5. Translation (English to German)
+Translates English text into German.
+```python
+translator = pipeline("translation_en_to_de", model="Helsinki-NLP/opus-mt-en-de")
+outputs = translator(text)
+print("translate-> ", outputs)
+```
+**Expected Output:**
+German translation of the input text.
+
+---
+
+### 6. Text Generation
+Generates text based on a given prompt.
+```python
+from transformers import set_seed
+set_seed(0)
+generator = pipeline("text-generation", model="gpt2-large")
+prompt = "There was a lion "
+outputs = generator(prompt, max_length=128)
+```
+**Expected Output:**
+A generated story continuing the prompt.
+
+---
+
+### 7. Image Classification
+Classifies an image using a pre-trained model.
+```python
+from PIL import Image
+import requests
+
+url = "https://res.cloudinary.com/dk-find-out/image/upload/q_80,w_1920,f_auto/DCTM_Penguin_UK_DK_AL697473_RGB_PNG_namnse.jpg"
+image = Image.open(requests.get(url, stream=True).raw)
+classifier = pipeline("image-classification")
+outputs = classifier(image)
+print(outputs)
+```
+**Expected Output:**
+A list of predicted labels with confidence scores.
+
+
