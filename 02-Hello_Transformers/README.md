@@ -1,4 +1,4 @@
-# README
+# Pipeline transformers
 
 ## HF Transformers Implementation
 
@@ -148,4 +148,25 @@ A list of predicted labels with confidence scores.
 1  None           Hair  <PIL.Image.Image image mode=L size=626x417 at ...
 2  None  Upper-clothes  <PIL.Image.Image image mode=L size=626x417 at ...
 3  None           Face  <PIL.Image.Image image mode=L size=626x417 at ...
+```
+
+### 9.  Text to speech 
+
+```python
+text="""Sam Altman on Wednesday returned to OpenAI as the chief executive officer (CEO) and sacked the Board that had fired him last week. However, the only remaining member in the Board team is Adam D'Angelo, CEO of Quora.
+Ex-Salesforce co-CEO Bret Taylor and former US Treasury Secretary and president of Harvard University, Larry Summers will join D'Angelo."""
+synth = pipeline("text-to-speech")
+speech=synth(text)
+sf.write("speech.wav", speech["audio"].T, samplerate=speech['sampling_rate'])
+```
+
+### 10. Text to music generation
+
+```python
+synth = pipeline("text-to-audio", "facebook/musicgen-small")
+text = "a chill song with influences from lofi, chillstep and downtempo"
+
+music = synth(text, forward_params={"do_sample":True})
+# sf.write("music.wav",music["audio"].T, samplerate=music['sampling_rate'])
+scipy.io.wavfile.write("music.wav", rate=music["sampling_rate"], data=music['audio'])
 ```

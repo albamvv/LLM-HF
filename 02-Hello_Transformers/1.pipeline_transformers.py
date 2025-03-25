@@ -4,6 +4,11 @@ from PIL import Image  # Import PIL for image processing
 import requests  # Import requests to fetch images from URLs
 from transformers import set_seed  # Import set_seed for reproducibility
 import matplotlib.pyplot as plt
+import numpy as np
+import transformers
+import soundfile as sf
+transformers.__version__
+import scipy
 
 
 ##----------------------- Text classification ----------------
@@ -77,9 +82,31 @@ url = "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_2
 image = Image.open(requests.get(url, stream=True).raw)
 segmenter = pipeline("image-segmentation", model="mattmdjaga/segformer_b2_clothes")
 outputs = segmenter(image)
-print(pd.DataFrame(outputs))
+#print(pd.DataFrame(outputs))
+# Asumiendo que outputs[3]['mask'] es una imagen binaria
+mask = np.array(outputs[3]['mask'])  # Convierte la máscara a un array de numpy
 
+'''
+# Mostrar la máscara usando matplotlib
+plt.imshow(mask, cmap='gray')
+plt.title("Máscara del Segmento 3")
+plt.axis('off')
+plt.show()
+'''
 
-##----------------------- Image segmentation -------------------------
+##----------------------- Text to speech -------------------------
 
-##----------------------- Image segmentation -------------------------
+text="""Sam Altman on Wednesday returned to OpenAI as the chief executive officer (CEO) and sacked the Board that had fired him last week. However, the only remaining member in the Board team is Adam D'Angelo, CEO of Quora.
+Ex-Salesforce co-CEO Bret Taylor and former US Treasury Secretary and president of Harvard University, Larry Summers will join D'Angelo."""
+synth = pipeline("text-to-speech")
+speech=synth(text)
+sf.write("assets/speech.wav", speech["audio"].T, samplerate=speech['sampling_rate'])
+
+##----------------------- Text to music generation -------------------------
+
+synth = pipeline("text-to-audio", "facebook/musicgen-small")
+text = "a chill song with influences from lofi, chillstep and downtempo"
+
+music = synth(text, forward_params={"do_sample":True})
+# sf.write("music.wav",music["audio"].T, samplerate=music['sampling_rate'])
+scipy.io.wavfile.write("assets/music.wav", rate=music["sampling_rate"], data=music['audio'])
