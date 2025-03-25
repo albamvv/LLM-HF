@@ -10,27 +10,30 @@ model="SamLowe/roberta-base-go_emotions"
 classifier = pipeline("text-classification", model=model)
 text = "wow! we have come across this far"
 outputs = classifier(text)  # Classify the input text
-print(pd.DataFrame(outputs))  # Print results as a DataFrame
+#print(pd.DataFrame(outputs))# Print results as a DataFrame
 
-"""
 ##----------------------- Named Entity Recognition (NER) ----------------
 # Load an NER pipeline with an aggregation strategy
+#ner_tagger = pipeline("ner", aggregation_strategy="simple")
 ner_tagger = pipeline("ner", aggregation_strategy="simple", model="ml6team/keyphrase-extraction-kbir-inspec")
 text = "Keyphrase extraction is a technique in text analysis where you extract the important keyphrases from a document. Thanks to these keyphrases humans can understand the content of a text very quickly and easily without reading it completely."
 outputs = ner_tagger(text)  # Perform NER on the input text
-print("result-> ", pd.DataFrame(outputs))  # Print results
+#print((pd.DataFrame(outputs))) # Print results
+
+
 
 ##----------------------- Question Answering -------------------------
 text = """
-#Dear Amazon, last week I ordered an Optimus Prime action figure from your
-#onlin#
-# my horror that I had been sent an action figure of Megatron instead!
+Dear Amazon, last week I ordered an Optimus Prime action figure from your
+online store in India. Unfortunately when I opened the package, I discovered to
+my horror that I had been sent an action figure of Megatron instead!
 """
 reader = pipeline("question-answering")  # Load a question-answering pipeline
 question = "from where did I place the order?"
 outputs = reader(question=question, context=text)  # Answer the question based on the provided context
-print("result-> ", pd.DataFrame([outputs]))  # Print results
+print(pd.DataFrame([outputs]))  # Print results
 
+"""
 ##----------------------- Summarization -------------------------
 summarizer = pipeline("summarization")  # Load a summarization pipeline
 outputs = summarizer(text)  # Summarize the given text
