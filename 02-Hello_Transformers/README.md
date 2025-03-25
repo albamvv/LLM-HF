@@ -178,3 +178,11 @@ The script loads a pretrained language model, tokenizes an input text prompt for
 and generates a response using the model. It then decodes and prints the generated output.
 
 [Model: GemmaX2-28-2B-v0.1](https://huggingface.co/ModelSpace/GemmaX2-28-2B-v0.1)
+
+# 3️⃣ LLM Text tokenization
+
+The script loads the GPT-2 model and tokenizer, tokenizes a given input sentence, and processes it through the model to obtain raw logits,
+which represent the probabilities of possible next tokens. Instead of generating full text, it analyzes these logits to determine the most likely next token. 
+It also extracts and displays the top ten predicted tokens along with their probabilities, 
+making it useful for understanding how the model ranks different token predictions 
+and how it assigns likelihoods to various continuations of a given text.
