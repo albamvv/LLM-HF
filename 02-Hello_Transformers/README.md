@@ -22,6 +22,8 @@ pip install transformers pandas pillow requests
 
 ### 1. Text Classification
 Classifies text sentiment using a pre-trained model.
+[SamLowe/roberta-base-go_emotions](https://huggingface.co/SamLowe/roberta-base-go_emotions)
+
 ```python
 from transformers import pipeline
 import pandas as pd
