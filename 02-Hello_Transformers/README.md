@@ -51,7 +51,7 @@ print("result-> ", pd.DataFrame(outputs))
 ```
 **Expected Output:**
 A dataframe listing extracted keyphrases and their scores.
-````sh
+```sh
   entity_group     score                   word  start  end
 0          KEY  0.999997   Keyphrase extraction      0   20
 1          KEY  0.999993          text analysis     39   52
