@@ -174,10 +174,72 @@ scipy.io.wavfile.write("music.wav", rate=music["sampling_rate"], data=music['aud
 
 # 2️⃣ LLM Traslate
 
+
+## Overview
+This script loads a pretrained language model to translate text from Chinese to English. It provides different methods for translation: direct model inference and pipeline-based inference.
+
 The script loads a pretrained language model, tokenizes an input text prompt for translation, 
 and generates a response using the model. It then decodes and prints the generated output.
 
 [Model: GemmaX2-28-2B-v0.1](https://huggingface.co/ModelSpace/GemmaX2-28-2B-v0.1)
+
+## Prerequisites
+Before running the script, ensure you have the following dependencies installed:
+```bash
+pip install transformers torch
+```
+
+## Implementation Steps
+
+### 1. Load the Pretrained Model and Tokenizer
+The script first loads the tokenizer and model using Hugging Face's `transformers` library.
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+model_id = "ModelSpace/GemmaX2-28-2B-v0.1"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id)
+```
+
+### 2. Tokenize and Generate Translation
+The input text (in Chinese) is tokenized and passed through the model to generate translated text.
+```python
+text = "Translate this from Chinese to English:\nChinese: 我爱机器翻译\nEnglish:"
+inputs = tokenizer(text, return_tensors="pt")
+outputs = model.generate(**inputs, max_new_tokens=50)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+### 3. Use a Pipeline for Translation
+An alternative method is using the `pipeline` function, which simplifies the translation process.
+```python
+from transformers import pipeline
+
+pipeline_translator = pipeline("translation", model="ModelSpace/GemmaX2-28-2B-v0.1")
+text = "我爱机器翻译"
+translated_text = pipeline_translator(text)
+print(translated_text)
+```
+
+### 4. Alternative Model for Translation
+The script also includes an option to use another model (`Helsinki-NLP/opus-mt-zh-en`).
+```python
+pipeline_translator2 = pipeline("translation", model="Helsinki-NLP/opus-mt-zh-en")
+translated_text2 = pipeline_translator2(text)
+print(translated_text2[0]['translation_text'])
+```
+
+## Running the Script
+Execute the script using:
+```bash
+python 2.LLM_traslate.py
+```
+This will print translated text for the given Chinese input.
+
+## Conclusion
+This script demonstrates multiple ways to perform machine translation using pretrained models, providing flexibility in implementation.
+
+
 
 # 3️⃣ LLM Text tokenization
 
