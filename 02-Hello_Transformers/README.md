@@ -133,4 +133,19 @@ A list of predicted labels with confidence scores.
 [{'label': 'Egyptian cat', 'score': 0.9214929938316345}, {'label': 'tabby, tabby cat', 'score': 0.058183521032333374}, {'label': 'tiger cat', 'score': 0.012602909468114376}, {'label': 'lynx, catamount', 'score': 0.0037158718332648277}, {'label': 'Siamese cat, Siamese', 'score': 0.00039997967542149127}]
 ```
 
-
+### 8.  Image segmentation 
+```python
+url = "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
+image = Image.open(requests.get(url, stream=True).raw)
+segmenter = pipeline("image-segmentation", model="mattmdjaga/segformer_b2_clothes")
+outputs = segmenter(image)
+```
+**Expected Output:**
+A list of predicted labels with confidence scores.
+```sh
+  score          label                                               mask
+0  None     Background  <PIL.Image.Image image mode=L size=626x417 at ...
+1  None           Hair  <PIL.Image.Image image mode=L size=626x417 at ...
+2  None  Upper-clothes  <PIL.Image.Image image mode=L size=626x417 at ...
+3  None           Face  <PIL.Image.Image image mode=L size=626x417 at ...
+```

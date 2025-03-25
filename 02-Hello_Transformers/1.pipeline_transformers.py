@@ -3,6 +3,8 @@ import pandas as pd  # Import pandas for handling tabular data
 from PIL import Image  # Import PIL for image processing
 import requests  # Import requests to fetch images from URLs
 from transformers import set_seed  # Import set_seed for reproducibility
+import matplotlib.pyplot as plt
+
 
 ##----------------------- Text classification ----------------
 # Load a text classification pipeline with a specified model
@@ -62,10 +64,22 @@ classifier = pipeline("image-classification")
 url = "https://res.cloudinary.com/dk-find-out/image/upload/q_80,w_1920,f_auto/DCTM_Penguin_UK_DK_AL697473_RGB_PNG_namnse.jpg"
 image = Image.open(requests.get(url, stream=True).raw)  # Fetch and open the image
 outputs = classifier(image)  # Classify the image
-print("image classification-> ", outputs)  # Print the classification results
+#print("image classification-> ", outputs)  # Print the classification results
 
 url = "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
 image = Image.open(requests.get(url, stream=True).raw)  # Fetch and open another image
 classifier = pipeline("image-classification", model="nateraw/vit-age-classifier")  # Load a different classification model
 outputs = classifier(image)  # Classify the image
-print("age classification-> ", outputs)  # Print the classification results
+#print("age classification-> ", outputs)  # Print the classification results
+
+##----------------------- Image segmentation -------------------------
+url = "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
+image = Image.open(requests.get(url, stream=True).raw)
+segmenter = pipeline("image-segmentation", model="mattmdjaga/segformer_b2_clothes")
+outputs = segmenter(image)
+print(pd.DataFrame(outputs))
+
+
+##----------------------- Image segmentation -------------------------
+
+##----------------------- Image segmentation -------------------------
