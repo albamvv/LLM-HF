@@ -1,4 +1,5 @@
-# Pipeline transformers
+# 1️⃣ Pipeline transformers
+
 
 ## HF Transformers Implementation
 
@@ -170,3 +171,10 @@ music = synth(text, forward_params={"do_sample":True})
 # sf.write("music.wav",music["audio"].T, samplerate=music['sampling_rate'])
 scipy.io.wavfile.write("music.wav", rate=music["sampling_rate"], data=music['audio'])
 ```
+
+# 2️⃣ LLM Traslate
+
+The script loads a pretrained language model, tokenizes an input text prompt for translation, 
+and generates a response using the model. It then decodes and prints the generated output.
+
+[Model: GemmaX2-28-2B-v0.1](https://huggingface.co/ModelSpace/GemmaX2-28-2B-v0.1)
