@@ -6,11 +6,13 @@ from transformers import set_seed  # Import set_seed for reproducibility
 
 ##----------------------- Text classification ----------------
 # Load a text classification pipeline with a specified model
-classifier = pipeline("text-classification", model="SamLowe/roberta-base-go_emotions")
+model="SamLowe/roberta-base-go_emotions"
+classifier = pipeline("text-classification", model=model)
 text = "wow! we have come across this far"
 outputs = classifier(text)  # Classify the input text
-print("result-> ", pd.DataFrame(outputs))  # Print results as a DataFrame
+print(pd.DataFrame(outputs))  # Print results as a DataFrame
 
+"""
 ##----------------------- Named Entity Recognition (NER) ----------------
 # Load an NER pipeline with an aggregation strategy
 ner_tagger = pipeline("ner", aggregation_strategy="simple", model="ml6team/keyphrase-extraction-kbir-inspec")
@@ -20,9 +22,9 @@ print("result-> ", pd.DataFrame(outputs))  # Print results
 
 ##----------------------- Question Answering -------------------------
 text = """
-Dear Amazon, last week I ordered an Optimus Prime action figure from your
-online store in India. Unfortunately, when I opened the package, I discovered to
-my horror that I had been sent an action figure of Megatron instead!
+#Dear Amazon, last week I ordered an Optimus Prime action figure from your
+#onlin#
+# my horror that I had been sent an action figure of Megatron instead!
 """
 reader = pipeline("question-answering")  # Load a question-answering pipeline
 question = "from where did I place the order?"
@@ -60,3 +62,5 @@ image = Image.open(requests.get(url, stream=True).raw)  # Fetch and open another
 classifier = pipeline("image-classification", model="nateraw/vit-age-classifier")  # Load a different classification model
 outputs = classifier(image)  # Classify the image
 print("age classification-> ", outputs)  # Print the classification results
+"
+"""

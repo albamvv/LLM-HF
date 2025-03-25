@@ -35,7 +35,10 @@ print("result-> ", pd.DataFrame(outputs))
 ```
 **Expected Output:**
 A dataframe with the predicted emotion label and confidence score.
-
+``` sh
+      label     score
+0  surprise  0.630752
+```
 ---
 
 ### 2. Named Entity Recognition (NER)
