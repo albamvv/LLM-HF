@@ -31,26 +31,30 @@ my horror that I had been sent an action figure of Megatron instead!
 reader = pipeline("question-answering")  # Load a question-answering pipeline
 question = "from where did I place the order?"
 outputs = reader(question=question, context=text)  # Answer the question based on the provided context
-print(pd.DataFrame([outputs]))  # Print results
+#print(pd.DataFrame([outputs]))  # Print results
 
-"""
+
 ##----------------------- Summarization -------------------------
 summarizer = pipeline("summarization")  # Load a summarization pipeline
 outputs = summarizer(text)  # Summarize the given text
-print("summarize-> ", outputs)  # Print the summary
+#print("summarize-> ", outputs)  # Print the summary
+
 
 ##----------------------- Translation -------------------------
 translator = pipeline("translation_en_to_de", model="Helsinki-NLP/opus-mt-en-de")  # Load an English-to-German translation pipeline
 outputs = translator(text)  # Translate the text
-print("translate-> ", outputs)  # Print the translated text
+#print("translate-> ", outputs)  # Print the translated text
+
 
 ##----------------------- Text Generation -------------------------
 set_seed(0)  # Set seed for reproducibility
 generator = pipeline("text-generation", model="gpt2-large")  # Load a text-generation model
 response = "I am sorry to hear that your order was mixed up"
+#prompt= "user: " + text +" Customer Service Response. " + response
 prompt = "There was a lion "  # Provide a text prompt for generation
 outputs = generator(prompt, max_length=128)  # Generate text based on the prompt
 print("generated text-> ", outputs)  # Print the generated text
+
 
 ##----------------------- Image classification -------------------------
 # Load an image classification pipeline and classify two images from URLs
@@ -65,5 +69,3 @@ image = Image.open(requests.get(url, stream=True).raw)  # Fetch and open another
 classifier = pipeline("image-classification", model="nateraw/vit-age-classifier")  # Load a different classification model
 outputs = classifier(image)  # Classify the image
 print("age classification-> ", outputs)  # Print the classification results
-"
-"""
