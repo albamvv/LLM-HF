@@ -4,6 +4,9 @@
 
 This project demonstrates various Natural Language Processing (NLP) and Image Processing tasks using Hugging Face Transformers. It includes text classification, named entity recognition, question answering, text summarization, translation, text generation, and image classification.
 
+[Hugging Face Transformers Quicktour](https://huggingface.co/docs/transformers/v4.35.0/en/quicktour#pipeline)
+
+![alt text](assets/pipeline_summarize.JPG)
 ---
 
 ## Installation
