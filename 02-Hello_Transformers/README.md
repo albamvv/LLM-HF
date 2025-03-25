@@ -243,8 +243,88 @@ This script demonstrates multiple ways to perform machine translation using pret
 
 # 3️⃣ LLM Text tokenization
 
+
+## Overview
+This project demonstrates how to tokenize text using the GPT-2 tokenizer and generate predictions using a pretrained GPT-2 language model. The script tokenizes an input sentence, processes it with the model, and extracts probabilities for the next possible tokens.
+
 The script loads the GPT-2 model and tokenizer, tokenizes a given input sentence, and processes it through the model to obtain raw logits,
 which represent the probabilities of possible next tokens. Instead of generating full text, it analyzes these logits to determine the most likely next token. 
 It also extracts and displays the top ten predicted tokens along with their probabilities, 
 making it useful for understanding how the model ranks different token predictions 
 and how it assigns likelihoods to various continuations of a given text.
+
+## Prerequisites
+Ensure you have the following installed before running the script:
+- Python 3.7+
+- PyTorch
+- Transformers (Hugging Face library)
+
+Install the required dependencies using:
+```bash
+pip install torch transformers
+```
+
+## Implementation Steps
+
+### 1. Import Necessary Libraries
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+import torch
+```
+The script uses the `transformers` library from Hugging Face to handle tokenization and model loading.
+
+### 2. Load the Pretrained GPT-2 Tokenizer and Model
+```python
+tokenizer = AutoTokenizer.from_pretrained("gpt2")  
+gpt2 = AutoModelForCausalLM.from_pretrained("gpt2")
+```
+This loads the GPT-2 tokenizer and the corresponding language model.
+
+### 3. Define Input Sentence
+```python
+sentence = "The future of AI is"
+```
+This defines the input text that will be tokenized and processed by the model.
+
+### 4. Tokenize the Input
+```python
+input_ids = tokenizer(sentence, return_tensors='pt').input_ids  
+```
+This converts the sentence into token IDs, which are then passed as input tensors.
+
+### 5. Model Prediction
+```python
+output = gpt2(input_ids)  
+final_logits = output.logits[0, -1]
+```
+The model generates logits, which represent unprocessed probabilities for the next possible tokens.
+
+### 6. Determine the Most Likely Next Token
+```python
+next_token = tokenizer.decode(final_logits.argmax())
+print("Next token prediction:", next_token)
+```
+This extracts and decodes the most probable next token predicted by the model.
+
+### 7. Generate the Top 10 Predictions
+```python
+top10 = torch.topk(final_logits.softmax(dim=0), 10)
+for value, index in zip(top10.values, top10.indices):
+    print(f"{tokenizer.decode(index)} -- {value.item():.1%}")
+```
+This calculates the probability distribution using softmax and lists the top 10 predictions with their probabilities.
+
+## Running the Script
+Save the script as `3.LLM_Text_tokenization.py` and execute it using:
+```bash
+python 3.LLM_Text_tokenization.py
+```
+The output will display the next most likely token along with the top 10 predictions and their probabilities.
+
+## Notes
+- This script works with the GPT-2 model but can be adapted to other transformer-based models.
+- The logits returned are raw values and require softmax transformation to convert them into probabilities.
+- Ensure GPU support (if available) by modifying the script to use `.to("cuda")` when loading the model and input tensors.
+
+
+
