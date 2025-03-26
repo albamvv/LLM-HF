@@ -11,16 +11,30 @@ df = pd.read_csv("assets/twitter_sentiment.csv")
 
 # Count the frequency of each category in the 'label_name' column
 label_counts = df['label_name'].value_counts(ascending=True)
+# Calculate the number of words per tweet
+df['Words per Tweet'] = df['text'].str.split().apply(len)
+print("Words per Tweet-> ",df['Words per Tweet'])
 
-# Plot the distribution of classes
-label_counts.plot.barh()
-plt.title("Frequency of Classes")
-plt.xlabel("Count")
-plt.ylabel("Label")
-plt.show()
+# Create a figure with two subplots
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-print(df['Words per Tweet'] = df['text'].str.split().apply(len))
-print(df.boxplot("Words per Tweet", by="label_name"))
+# ----------------- Bar Plot: Frequency of Classes ------------------------
+label_counts = df['label_name'].value_counts(ascending=True)
+label_counts.plot.barh(ax=axes[0])  # Plot on the first subplot
+axes[0].set_title("Frequency of Classes")
+axes[0].set_xlabel("Count")
+axes[0].set_ylabel("Label")
+
+# ----------------- Box Plot: Words per Tweet by Sentiment ------------------------
+df.boxplot(column="Words per Tweet", by="label_name", ax=axes[1], grid=False)
+axes[1].set_title("Words per Tweet by Sentiment")
+axes[1].set_xlabel("Sentiment")
+axes[1].set_ylabel("Word Count")
+
+# Adjust layout and remove automatic boxplot title
+plt.suptitle("")  
+plt.tight_layout()
+plt.show() # Show the plots
 
 
 # ----------------------- Text to Tokens Conversion ----------------------
