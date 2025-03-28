@@ -7,9 +7,11 @@ from pprint import pprint
 from transformers import AutoModel 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoConfig
+from sklearn.metrics import classification_report, confusion_matrix
 from transformers import TrainingArguments
 from transformers import Trainer
 from transformers import pipeline
+import numpy as np
 from utils import compute_metrics,compute_metrics_evaluate, get_prediction
 
 
@@ -97,14 +99,14 @@ id2label = {v:k for k,v in label2id.items()}
 # ----- Model building -----
 model = AutoModel.from_pretrained(model_ckpt)
 model.config.id2label
-model.config
 
  # --- Fine tunning transformers ---
 num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
-pprint(model.config)
+
+
 
 batch_size = 64
 training_dir = "bert_base_train_dir"
@@ -118,6 +120,7 @@ training_args = TrainingArguments( output_dir=training_dir,
                                   evaluation_strategy = 'epoch',
                                   disable_tqdm = False
 )
+
 
 #----------- Build model and trainer --------------
 
@@ -137,6 +140,7 @@ preds_output.metrics
 y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = emotion_encoded['test'][:]['label']
 
+'''
 print(classification_report(y_true, y_pred))
 print(label2id)
 
@@ -157,4 +161,4 @@ trainer.save_model("bert-base-uncased-sentiment-model")
 classifier = pipeline('text-classification', model= 'bert-base-uncased-sentiment-model')
 classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
 
-
+'''
