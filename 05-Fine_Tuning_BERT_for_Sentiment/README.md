@@ -173,6 +173,7 @@ dataset = dataset.map(tokenize, batched=True, batch_size=None)
 Since machine learning models work with numerical labels, we create mappings:
 
 **Dictionary mapping label names to numerical IDs**
+- The resulting dictionary maps sentiment names to numerical IDs. 
 ```python
 label2id = {x['label_name']: x['label'] for x in dataset['train']}
 print(label2id)   
@@ -183,6 +184,7 @@ Output:
 {'sadness': 0, 'joy': 1, 'surprise': 5, 'anger': 3, 'love': 2, 'fear': 4}
 ```
 **Reverse mapping from IDs to labels**
+- The new dictionary maps numerical IDs back to sentiment labels.
 
 ```python
 id2label = {v: k for k, v in label2id.items()}
