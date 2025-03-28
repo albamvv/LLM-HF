@@ -55,9 +55,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 text = "I love machine learning! Tokenization is awesome!!"
 encoded_text = tokenizer(text)
-print(encoded_text)
+#print(encoded_text)
 input_ids = tokenizer(text, return_tensors='pt').input_ids  
-print('input_id: ', input_ids)  
+#print('input_id: ', input_ids)  
 
 #---------- data loader and train test split -----------
 train, test = train_test_split(df, test_size=0.3, stratify=df['label_name'])
@@ -71,9 +71,9 @@ dataset = DatasetDict(
      }
      
 )
-print(dataset)
-pprint(dataset['train'][0])
-pprint(dataset['train'][1])
+#print(dataset)
+#pprint(dataset['train'][0])
+#pprint(dataset['train'][1])
 
 # ------------------------ Tokenization of the Emotion/Sentiment Data
 

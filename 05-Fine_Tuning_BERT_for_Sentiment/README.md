@@ -83,6 +83,7 @@ print(encoded_text)  # Tokenized representation of text
 ```
 **Ouput**
 ```sh 
+{'input_ids': [101, 1045, 2293, 3698, 4083, 999, 19204, 3989, 2003, 12476, 999, 999, 102], 'token_type_ids': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'attention_mask': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
 ```
 
 ```python
@@ -92,6 +93,8 @@ print('input_id: ', input_ids)
 
 **Ouput**
 ```sh 
+input_id:  tensor([[  101,  1045,  2293,  3698,  4083,   999, 19204,  3989,  2003, 12476,
+           999,   999,   102]])
 ```
 ### 4. Splitting Data and Creating Dataset
 
@@ -110,6 +113,50 @@ dataset = DatasetDict({
     'test': Dataset.from_pandas(test, preserve_index=False),
     'validation': Dataset.from_pandas(validation, preserve_index=False)
 })
+```
+
+**Ouput:**
+```sh
+DatasetDict({
+    train: Dataset({
+        features: ['text', 'label', 'label_name', 'Words per Tweet'],
+        num_rows: 11200
+    })
+    test: Dataset({
+        features: ['text', 'label', 'label_name', 'Words per Tweet'],
+        num_rows: 3200
+    })
+    validation: Dataset({
+        features: ['text', 'label', 'label_name', 'Words per Tweet'],
+        num_rows: 1600
+    })
+})
+```
+```python
+pprint(dataset['train'][0])
+```
+**Output**
+```sh
+{'Words per Tweet': 9,
+ 'label': 1,
+ 'label_name': 'joy',
+ 'text': 'i think we ll feel pretty good about that'}
+```
+```python
+pprint(dataset['train'][1])
+```
+
+**Output**
+```sh
+{'Words per Tweet': 32,
+ 'label': 3,
+ 'label_name': 'anger',
+ 'text': 'i feel like i m so distracted by silly things like twitter that i '
+         'can spend an entire evening with the kids and not actually hear a '
+         'thing that they re saying'}
+ 'text': 'i feel like i m so distracted by silly things like twitter that i '
+         'can spend an entire evening with the kids and not actually hear a '
+         'thing that they re saying'}
 ```
 
 Next, we apply tokenization to the dataset:
