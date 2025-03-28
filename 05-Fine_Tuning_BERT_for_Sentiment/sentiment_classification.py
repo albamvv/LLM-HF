@@ -43,7 +43,7 @@ axes[1].set_ylabel("Word Count")
 # Adjust layout and remove automatic boxplot title
 plt.suptitle("")  
 plt.tight_layout()
-#plt.show() # Show the plots
+plt.show() # Show the plots
 
 
 # ----------------------- Text to Tokens Conversion ----------------------

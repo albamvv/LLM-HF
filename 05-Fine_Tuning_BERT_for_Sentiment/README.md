@@ -63,14 +63,13 @@ plt.suptitle("")  # Remove automatic title
 plt.tight_layout()
 plt.show()
 ```
+![Alt text](assets/data_visualization.JPG)
 
 ### 3. Tokenization
 
 Transformer models like BERT cannot process raw text directly. Instead, text must be tokenized and converted into numerical vectors. We use the BERT tokenizer for this:
 
 ```python
-from transformers import AutoTokenizer
-
 model_ckpt = "bert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 ```
@@ -88,9 +87,6 @@ print(encoded_text)  # Tokenized representation of text
 To train the model, we split the dataset into training, validation, and testing sets:
 
 ```python
-from sklearn.model_selection import train_test_split
-from datasets import Dataset, DatasetDict
-
 train, test = train_test_split(df, test_size=0.3, stratify=df['label_name'])
 test, validation = train_test_split(test, test_size=1/3, stratify=test['label_name'])
 ```
@@ -130,9 +126,6 @@ print(id2label)  # Reverse mapping from IDs to labels
 We now load the BERT model for sequence classification and configure it to recognize our label mappings:
 
 ```python
-from transformers import AutoModelForSequenceClassification, AutoConfig
-import torch
-
 num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
