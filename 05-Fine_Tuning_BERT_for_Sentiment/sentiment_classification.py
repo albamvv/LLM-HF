@@ -89,6 +89,7 @@ label2id = {x['label_name']:x['label'] for x in dataset['train']}
 id2label = {v:k for k,v in label2id.items()}
 
 print(label2id)
+print("----")
 print(id2label)
 
 # ----- Model building -----
@@ -101,3 +102,4 @@ num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
+pprint(model.config)

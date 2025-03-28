@@ -175,10 +175,26 @@ Since machine learning models work with numerical labels, we create mappings:
 ```python
 label2id = {x['label_name']: x['label'] for x in dataset['train']}
 id2label = {v: k for k, v in label2id.items()}
-print(label2id)  # Dictionary mapping label names to numerical IDs
-print(id2label)  # Reverse mapping from IDs to labels
 ```
+**Dictionary mapping label names to numerical IDs**
+```python
+print(label2id)   
+```
+Output:
 
+```sh
+{'sadness': 0, 'joy': 1, 'surprise': 5, 'anger': 3, 'love': 2, 'fear': 4}
+```
+**Reverse mapping from IDs to labels**
+
+```python
+print(id2label)  
+```
+Ouput: 
+```sh
+{0: 'sadness', 1: 'joy', 5: 'surprise', 3: 'anger', 2: 'love', 4: 'fear'}
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
+```
 ### 6. Load Pretrained Model
 
 We now load the BERT model for sequence classification and configure it to recognize our label mappings:
