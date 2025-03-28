@@ -6,6 +6,7 @@ from datasets import Dataset, DatasetDict
 from pprint import pprint
 from transformers import AutoModel 
 import torch
+from transformers import AutoModelForSequenceClassification, AutoConfig
 
 
 
@@ -91,3 +92,12 @@ print(label2id)
 print(id2label)
 
 # ----- Model building -----
+model = AutoModel.from_pretrained(model_ckpt)
+model.config.id2label
+model.config
+
+ # --- Fine tunning transformers ---
+num_labels = len(label2id)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
+model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
