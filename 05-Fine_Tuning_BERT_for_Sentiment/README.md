@@ -81,7 +81,18 @@ text = "I love machine learning! Tokenization is awesome!!"
 encoded_text = tokenizer(text)
 print(encoded_text)  # Tokenized representation of text
 ```
+**Ouput**
+```sh 
+```
 
+```python
+input_ids = tokenizer(text, return_tensors='pt').input_ids  
+print('input_id: ', input_ids)  
+```
+
+**Ouput**
+```sh 
+```
 ### 4. Splitting Data and Creating Dataset
 
 To train the model, we split the dataset into training, validation, and testing sets:
