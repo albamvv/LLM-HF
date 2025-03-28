@@ -1,10 +1,10 @@
 # Sentiment Classification using Transformers
 
-This project performs sentiment classification using transformer models, specifically leveraging BERT (`bert-base-uncased`). The dataset consists of tweets labeled with sentiment categories. 
+This project performs sentiment classification using transformer models, specifically leveraging BERT (`bert-base-uncased`). The dataset consists of tweets labeled with sentiment categories, and we will walk through each step from loading data to preparing the model.
 
 ## Installation
 
-Ensure you have the necessary dependencies installed:
+Before running the script, ensure you have the required Python libraries installed. You can do this by running:
 
 ```bash
 pip install pandas matplotlib transformers datasets scikit-learn torch
@@ -14,7 +14,7 @@ pip install pandas matplotlib transformers datasets scikit-learn torch
 
 ### 1. Load and Analyze Data
 
-Load the dataset:
+The dataset used in this project is stored as a CSV file. We first load it into a Pandas DataFrame:
 
 ```python
 import pandas as pd
@@ -23,58 +23,69 @@ import matplotlib.pyplot as plt
 df = pd.read_csv("assets/twitter_sentiment.csv")
 ```
 
-Perform basic analysis:
+#### Data Exploration
+
+To understand the structure of the dataset, we can check its information:
 
 ```python
-print(df.info())  # General dataset information
-print(df.isnull().sum())  # Check for missing values
-print(df['label'].value_counts())  # Count occurrences of each label
+print(df.info())  # Displays the number of rows, columns, and data types
+print(df.isnull().sum())  # Checks for missing values in each column
+print(df['label'].value_counts())  # Shows the count of each sentiment category
 ```
 
 ### 2. Visualizing Data
 
-Plot class distribution and word count per tweet:
+To gain insights into the data distribution, we create plots for class frequency and word count per tweet.
+
+#### Plot Class Distribution
 
 ```python
 label_counts = df['label_name'].value_counts(ascending=True)
-df['Words per Tweet'] = df['text'].str.split().apply(len)
-
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-label_counts.plot.barh(ax=axes[0])
+label_counts.plot.barh(ax=axes[0])  # Horizontal bar plot
 axes[0].set_title("Frequency of Classes")
 axes[0].set_xlabel("Count")
 axes[0].set_ylabel("Label")
+```
 
+#### Plot Word Count Distribution
+
+We calculate the number of words per tweet and create a box plot:
+
+```python
+df['Words per Tweet'] = df['text'].str.split().apply(len)
 df.boxplot(column="Words per Tweet", by="label_name", ax=axes[1], grid=False)
 axes[1].set_title("Words per Tweet by Sentiment")
 axes[1].set_xlabel("Sentiment")
 axes[1].set_ylabel("Word Count")
 
-plt.suptitle("")  
+plt.suptitle("")  # Remove automatic title
 plt.tight_layout()
 plt.show()
 ```
 
 ### 3. Tokenization
 
-Use BERT tokenizer to convert text into numerical representation:
+Transformer models like BERT cannot process raw text directly. Instead, text must be tokenized and converted into numerical vectors. We use the BERT tokenizer for this:
 
 ```python
 from transformers import AutoTokenizer
 
 model_ckpt = "bert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
-
-def tokenize(batch):
-    return tokenizer(batch['text'], padding=True, truncation=True)
-
-encoded_text = tokenizer("I love machine learning! Tokenization is awesome!!")
-print(encoded_text)
 ```
 
-### 4. Data Splitting and Conversion to Dataset
+To see how tokenization works, let’s tokenize an example sentence:
 
-Split the dataset into training, testing, and validation sets:
+```python
+text = "I love machine learning! Tokenization is awesome!!"
+encoded_text = tokenizer(text)
+print(encoded_text)  # Tokenized representation of text
+```
+
+### 4. Splitting Data and Creating Dataset
+
+To train the model, we split the dataset into training, validation, and testing sets:
 
 ```python
 from sklearn.model_selection import train_test_split
@@ -82,7 +93,11 @@ from datasets import Dataset, DatasetDict
 
 train, test = train_test_split(df, test_size=0.3, stratify=df['label_name'])
 test, validation = train_test_split(test, test_size=1/3, stratify=test['label_name'])
+```
 
+We then convert these into the Hugging Face `DatasetDict` format:
+
+```python
 dataset = DatasetDict({
     'train': Dataset.from_pandas(train, preserve_index=False),
     'test': Dataset.from_pandas(test, preserve_index=False),
@@ -90,26 +105,29 @@ dataset = DatasetDict({
 })
 ```
 
-Apply tokenization to the dataset:
+Next, we apply tokenization to the dataset:
 
 ```python
+def tokenize(batch):
+    return tokenizer(batch['text'], padding=True, truncation=True)
+
 dataset = dataset.map(tokenize, batched=True, batch_size=None)
 ```
 
 ### 5. Mapping Labels
 
-Create mappings between labels and numerical IDs:
+Since machine learning models work with numerical labels, we create mappings:
 
 ```python
 label2id = {x['label_name']: x['label'] for x in dataset['train']}
 id2label = {v: k for k, v in label2id.items()}
-print(label2id)
-print(id2label)
+print(label2id)  # Dictionary mapping label names to numerical IDs
+print(id2label)  # Reverse mapping from IDs to labels
 ```
 
 ### 6. Load Pretrained Model
 
-Load the BERT model for sequence classification:
+We now load the BERT model for sequence classification and configure it to recognize our label mappings:
 
 ```python
 from transformers import AutoModelForSequenceClassification, AutoConfig
@@ -121,6 +139,3 @@ config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2l
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
 ```
 
-## Conclusion
-
-This project sets up a sentiment classification pipeline using BERT, covering data loading, preprocessing, tokenization, and model initialization. The next steps involve training and evaluation.
