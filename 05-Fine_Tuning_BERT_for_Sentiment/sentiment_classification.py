@@ -7,6 +7,10 @@ from pprint import pprint
 from transformers import AutoModel 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoConfig
+from transformers import TrainingArguments
+from transformers import Trainer
+from transformers import pipeline
+from utils import compute_metrics,compute_metrics_evaluate, get_prediction
 
 
 
@@ -86,11 +90,9 @@ emotion_encoded = dataset.map(tokenize, batched=True, batch_size=None)
 
 # label2id, id2label
 label2id = {x['label_name']:x['label'] for x in dataset['train']}
+#print(label2id)
 id2label = {v:k for k,v in label2id.items()}
-
-print(label2id)
-print("----")
-print(id2label)
+#print(id2label)
 
 # ----- Model building -----
 model = AutoModel.from_pretrained(model_ckpt)
@@ -103,3 +105,56 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
 pprint(model.config)
+
+batch_size = 64
+training_dir = "bert_base_train_dir"
+training_args = TrainingArguments( output_dir=training_dir,
+                                  overwrite_output_dir = True,
+                                  num_train_epochs = 2,
+                                  learning_rate = 2e-5,
+                                  per_device_train_batch_size = batch_size,
+                                  per_device_eval_batch_size = batch_size,
+                                  weight_decay = 0.01,
+                                  evaluation_strategy = 'epoch',
+                                  disable_tqdm = False
+)
+
+#----------- Build model and trainer --------------
+
+trainer = Trainer(model=model, args=training_args,
+                  compute_metrics=compute_metrics,
+                  train_dataset = emotion_encoded['train'],
+                  eval_dataset = emotion_encoded['validation'],
+                  tokenizer = tokenizer)
+
+print(trainer.train())
+
+#------------- Model evaluation --------
+
+preds_output = trainer.predict(emotion_encoded['test'])
+preds_output.metrics
+
+y_pred = np.argmax(preds_output.predictions, axis=1)
+y_true = emotion_encoded['test'][:]['label']
+
+print(classification_report(y_true, y_pred))
+print(label2id)
+
+cm = confusion_matrix(y_true, y_pred)
+
+plt.figure(figsize=(5,5))
+sns.heatmap(cm, annot=True, xticklabels=label2id.keys(), yticklabels=label2id.keys(), fmt='d', cbar=False, cmap='Reds')
+plt.ylabel("Actual")
+plt.xlabel("Predicted")
+plt.show()
+
+# ----------- Build prediction function and store model
+
+text = "I am super happy today. I got it done. Finally!!"
+get_prediction(text)
+trainer.save_model("bert-base-uncased-sentiment-model")
+
+classifier = pipeline('text-classification', model= 'bert-base-uncased-sentiment-model')
+classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
+
+

@@ -1,6 +1,7 @@
 # Sentiment Classification using Transformers
 
 This project performs sentiment classification using transformer models, specifically leveraging BERT (`bert-base-uncased`). The dataset consists of tweets labeled with sentiment categories, and we will walk through each step from loading data to preparing the model.
+This project fine-tunes a **BERT-based model** for sentiment classification. The model classifies text into different sentiment categories using the **Hugging Face `transformers` library**.
 
 ## Installation
 
@@ -195,14 +196,127 @@ Ouput:
 {0: 'sadness', 1: 'joy', 5: 'surprise', 3: 'anger', 2: 'love', 4: 'fear'}
 Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
 ```
-### 6. Load Pretrained Model
-
-We now load the BERT model for sequence classification and configure it to recognize our label mappings:
+### 6. Model building
 
 ```python
+model = AutoModel.from_pretrained(model_ckpt)
+model.config.id2label  # Retrieve label mapping
+model.config  # View model configuration
+```
+- Loads a **pretrained BERT model**.
+- Retrieves **id-to-label mapping** to check sentiment classes.
+
+---
+
+## **7. Fine-Tuning the Transformer Model**
+```python
+
 num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
+pprint(model.config)
 ```
+- Configures the model with **custom label mappings**.
+- Moves the model to **GPU (if available)** for faster training.
+
+---
+
+## **8. Setting Training Arguments**
+```python
+batch_size = 64
+training_dir = "bert_base_train_dir"
+
+training_args = TrainingArguments(
+    output_dir=training_dir,
+    overwrite_output_dir=True,
+    num_train_epochs=2,
+    learning_rate=2e-5,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    weight_decay=0.01,
+    evaluation_strategy='epoch',
+    di
+```
+
+
+## **9. Building the Trainer**
+```python
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    compute_metrics=compute_metrics,
+    train_dataset=emotion_encoded['train'],
+    eval_dataset=emotion_encoded['validation'],
+    tokenizer=tokenizer
+)
+print(trainer.train())
+```
+- Initializes **Hugging Face's Trainer** for supervised training.
+- **Fine-tunes** the model using training and validation datasets.
+
+---
+
+## **10. Model Evaluation**
+```python
+preds_output = trainer.predict(emotion_encoded['test'])
+preds_output.metrics
+```
+- Evaluates the model on the **test dataset**.
+- **Generates accuracy metrics**.
+
+#### **Extract Predictions and Compare with True Labels**
+```python
+y_pred = np.argmax(preds_output.predictions, axis=1)
+y_true = emotion_encoded['test'][:]['label']
+
+print(classification_report(y_true, y_pred))
+print(label2id)
+```
+- Converts **model logits** into class predictions.
+- Prints a **classification report** (precision, recall, F1-score).
+
+#### **Confusion Matrix for Performance Visualization**
+```python
+cm = confusion_matrix(y_true, y_pred)
+
+plt.figure(figsize=(5,5))
+sns.heatmap(cm, annot=True, xticklabels=label2id.keys(), yticklabels=label2id.keys(), fmt='d', cbar=False, cmap='Reds')
+plt.ylabel("Actual")
+plt.xlabel("Predicted")
+plt.show()
+```
+- Generates a **confusion matrix** to visualize predictions.
+
+---
+
+## **11. Saving the Model and Making Predictions**
+```python
+text = "I am super happy today. I got it done. Finally!!"
+get_prediction(text)
+trainer.save_model("bert-base-uncased-sentiment-model")
+```
+- Saves the **fine-tuned BERT model**.
+- Uses `get_prediction()` to classify a sample sentence.
+
+---
+
+## **12. Loading the Model for Inference**
+```python
+classifier = pipeline('text-classification', model='bert-base-uncased-sentiment-model')
+classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
+```
+- Loads the **saved model** for text classification.
+- **Predicts sentiment** for multiple text inputs.
+
+---
+
+## **Summary**
+This script fine-tunes a **BERT-based model** for **sentiment classification** using:
+1. **Pretrained BERT Model** (`bert-base-uncased`)
+2. **Training with Optimized Hyperparameters**
+3. **Evaluation using Accuracy & Confusion Matrix**
+4. **Saving & Deploying the Model for Predictions**
+
+
 
