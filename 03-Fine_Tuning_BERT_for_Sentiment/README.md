@@ -282,19 +282,20 @@ print(model)
 ```
 - `config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)`
 
--   -   Loads the configuration for a pre-trained model from `model_ckpt`.
+    - Loads the configuration for a pre-trained model from `model_ckpt`.
 
--   -   It customizes the configuration by specifying `label2id` (mapping labels to IDs) and `id2label` (mapping IDs back to labels).
+    - It customizes the configuration by specifying `label2id` (mapping labels to IDs) and `id2label` (mapping IDs back to labels).
 
--   -   This is useful for classification tasks, ensuring the model correctly associates outputs with labels.
+    - This is useful for classification tasks, ensuring the model correctly associates outputs with labels.
 
-`model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)`
+`model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)`.
 
--   -   Loads a pre-trained model designed for sequence classification from `model_ckpt`.
+    - Loads a pre-trained model designed for sequence classification from `model_ckpt`.
 
--   -   Uses the previously defined `config` to ensure the model has the correct label mappings.
+    - Uses the previously defined `config` to ensure the model has the correct label mappings.
 
--   -   Moves the model to the appropriate device (`cuda` or `cpu`) for computation.
+    - Moves the model to the appropriate device (`cuda` or `cpu`) for computation.
+    
 ```sh
 BertForSequenceClassification(
   (bert): BertModel(

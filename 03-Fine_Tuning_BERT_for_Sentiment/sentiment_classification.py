@@ -108,10 +108,7 @@ num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
-print(model)
-
-
-'''
+#print(model)
 
 batch_size = 64
 training_dir = "bert_base_train_dir"
@@ -126,7 +123,7 @@ training_args = TrainingArguments( output_dir=training_dir,
                                   disable_tqdm = False
 )
 
-
+'''
 #----------- Build model and trainer --------------
 
 trainer = Trainer(model=model, args=training_args,
