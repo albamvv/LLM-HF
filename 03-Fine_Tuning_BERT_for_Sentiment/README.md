@@ -85,7 +85,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 To see how tokenization works, let’s tokenize an example sentence:
 
-**Encoded texr**
+**Encoded text**
 ```python
 text = "I love machine learning! Tokenization is awesome!!"
 encoded_text = tokenizer(text)
@@ -180,11 +180,19 @@ dataset = dataset.map(tokenize, batched=True, batch_size=None)
 ```
 
 ```sh
-{'text': 'I love this movie!', 
- 'label': 1, 
- 'input_ids': [101, 1045, 2293, 2023, 3185, 999, 102], 
- 'attention_mask': [1, 1, 1, 1, 1, 1, 1]}
+{'Words per Tweet': 9,
+ 'attention_mask': [1,1,1,1,1,1,.....1,1,1,1,1,1,...,0,0,0,0,0,0],
+ 'input_ids': [101,1045,10214,2000,2994,1999,2023,2173,....0,0,0,0,0,0],
+ 'label': 1,
+ 'label_name': 'joy',
+ 'text': 'i think we ll feel pretty good about that',
+ 'token_type_ids': [0,0,0,0,0,0,.......,0,0,0]}
+
 ```
+
+
+
+
 ### 5. Mapping Labels
 
 Since machine learning models work with numerical labels, we create mappings:
