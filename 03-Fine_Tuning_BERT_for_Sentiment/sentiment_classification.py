@@ -78,8 +78,8 @@ dataset = DatasetDict(
      
 )
 #print(dataset)
-pprint(dataset['train'][0])
-pprint(dataset['train'][1])
+#pprint(dataset['train'][0])
+#pprint(dataset['train'][1])
 
 
 # ------------------------ Tokenization of the Emotion/Sentiment Data
@@ -90,16 +90,16 @@ def tokenize(batch):
 
 #print(tokenize(dataset['train'][:2]))
 emotion_encoded = dataset.map(tokenize, batched=True, batch_size=None)
-print("-----------------")
-pprint(emotion_encoded['train'][0])
+#pprint(emotion_encoded['train'][0])
 
-'''
+
 # label2id, id2label
 label2id = {x['label_name']:x['label'] for x in dataset['train']}
 #print(label2id)
 id2label = {v:k for k,v in label2id.items()}
 #print(id2label)
 
+'''
 # ----- Model building -----
 model = AutoModel.from_pretrained(model_ckpt)
 model.config.id2label

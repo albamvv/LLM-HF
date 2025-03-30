@@ -170,7 +170,7 @@ pprint(dataset['train'][1])
          'thing that they re saying'}
 ```
 
-Next, we apply tokenization to the dataset:
+Next, we apply **tokenization** to the dataset:
 
 ```python
 def tokenize(batch):
@@ -189,8 +189,6 @@ dataset = dataset.map(tokenize, batched=True, batch_size=None)
  'token_type_ids': [0,0,0,0,0,0,.......,0,0,0]}
 
 ```
-
-
 
 
 ### 5. Mapping Labels
@@ -220,7 +218,13 @@ Ouput:
 {0: 'sadness', 1: 'joy', 5: 'surprise', 3: 'anger', 2: 'love', 4: 'fear'}
 Some weights of BertForSequenceClassification were not initialized from the model checkpoint at bert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight']
 ```
+---
+
 ### 6. Model building
+
+- Loads a **pretrained BERT model**.
+- Retrieves **id-to-label mapping** to check sentiment classes.
+
 
 ```python
 model = AutoModel.from_pretrained(model_ckpt)
@@ -257,8 +261,6 @@ BertConfig {
   "vocab_size": 30522
 }
 ```
-- Loads a **pretrained BERT model**.
-- Retrieves **id-to-label mapping** to check sentiment classes.
 
 ---
 
