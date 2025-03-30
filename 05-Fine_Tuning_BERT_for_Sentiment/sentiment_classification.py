@@ -12,9 +12,8 @@ from transformers import TrainingArguments
 from transformers import Trainer
 from transformers import pipeline
 import numpy as np
+import seaborn as sns
 from utils import compute_metrics,compute_metrics_evaluate, get_prediction
-
-
 
 # Load the CSV file from local storage
 df = pd.read_csv("assets/twitter_sentiment.csv")
@@ -89,6 +88,7 @@ def tokenize(batch):
 
 #print(tokenize(dataset['train'][:2]))
 emotion_encoded = dataset.map(tokenize, batched=True, batch_size=None)
+pprint(emotion_encoded['train'][0])
 
 # label2id, id2label
 label2id = {x['label_name']:x['label'] for x in dataset['train']}
@@ -140,9 +140,10 @@ preds_output.metrics
 y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = emotion_encoded['test'][:]['label']
 
-'''
+
 print(classification_report(y_true, y_pred))
 print(label2id)
+
 
 cm = confusion_matrix(y_true, y_pred)
 
@@ -161,4 +162,4 @@ trainer.save_model("bert-base-uncased-sentiment-model")
 classifier = pipeline('text-classification', model= 'bert-base-uncased-sentiment-model')
 classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
 
-'''
+

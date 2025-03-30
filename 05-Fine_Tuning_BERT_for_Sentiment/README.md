@@ -133,21 +133,22 @@ DatasetDict({
     })
 })
 ```
+**First print**
 ```python
 pprint(dataset['train'][0])
 ```
-**Output**
+
 ```sh
 {'Words per Tweet': 9,
  'label': 1,
  'label_name': 'joy',
  'text': 'i think we ll feel pretty good about that'}
 ```
+**Second print**
 ```python
 pprint(dataset['train'][1])
 ```
 
-**Output**
 ```sh
 {'Words per Tweet': 32,
  'label': 3,
@@ -169,6 +170,12 @@ def tokenize(batch):
 dataset = dataset.map(tokenize, batched=True, batch_size=None)
 ```
 
+```sh
+{'text': 'I love this movie!', 
+ 'label': 1, 
+ 'input_ids': [101, 1045, 2293, 2023, 3185, 999, 102], 
+ 'attention_mask': [1, 1, 1, 1, 1, 1, 1]}
+```
 ### 5. Mapping Labels
 
 Since machine learning models work with numerical labels, we create mappings:
