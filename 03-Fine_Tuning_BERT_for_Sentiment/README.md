@@ -85,22 +85,23 @@ tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 To see how tokenization works, let’s tokenize an example sentence:
 
+**Encoded texr**
 ```python
 text = "I love machine learning! Tokenization is awesome!!"
 encoded_text = tokenizer(text)
 print(encoded_text)  # Tokenized representation of text
 ```
-**Ouput**
+
 ```sh 
 {'input_ids': [101, 1045, 2293, 3698, 4083, 999, 19204, 3989, 2003, 12476, 999, 999, 102], 'token_type_ids': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'attention_mask': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
 ```
-
+**Inputs IDs**
 ```python
 input_ids = tokenizer(text, return_tensors='pt').input_ids  
 print('input_id: ', input_ids)  
 ```
 
-**Ouput**
+
 ```sh 
 input_id:  tensor([[  101,  1045,  2293,  3698,  4083,   999, 19204,  3989,  2003, 12476,
            999,   999,   102]])

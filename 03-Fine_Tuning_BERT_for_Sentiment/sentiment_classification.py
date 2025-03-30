@@ -60,9 +60,10 @@ tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 
 text = "I love machine learning! Tokenization is awesome!!"
 encoded_text = tokenizer(text)
-#print(encoded_text)
+print(encoded_text)
 input_ids = tokenizer(text, return_tensors='pt').input_ids  
-#print('input_id: ', input_ids)  
+print('input_id: ', input_ids)  
+'''
 
 #---------- data loader and train test split -----------
 train, test = train_test_split(df, test_size=0.3, stratify=df['label_name'])
@@ -161,5 +162,5 @@ trainer.save_model("bert-base-uncased-sentiment-model")
 
 classifier = pipeline('text-classification', model= 'bert-base-uncased-sentiment-model')
 classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
-
+'''
 
