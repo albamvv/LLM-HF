@@ -303,6 +303,7 @@ input_id:  tensor([[ 464, 2003,  286, 9552,  318]])
 for token_id in input_ids[0]:  
     print(tokenizer.decode(token_id))  # Print the corresponding token  
 ```
+**Output:**
 
 ```sh
 The    
@@ -318,6 +319,10 @@ final_logits = output.logits[0, -1]
 ```
 The model generates logits, which represent unprocessed probabilities for the next possible tokens.
 
+```sh
+final logits->  tensor([-119.8218, -119.7811, -126.3039,  ..., -128.0584, -124.4376,
+        -123.0562], grad_fn=<SelectBackward0>)
+```
 ### 5. Determine the Most Likely Next Token
 ```python
 next_token = tokenizer.decode(final_logits.argmax())
@@ -332,6 +337,18 @@ for value, index in zip(top10.values, top10.indices):
     print(f"{tokenizer.decode(index)} -- {value.item():.1%}")
 ```
 This calculates the probability distribution using softmax and lists the top 10 predictions with their probabilities.
+```sh
+ uncertain -- 6.1%
+ in -- 5.9%
+ not -- 4.5%
+ a -- 4.0%
+ still -- 3.6%
+ going -- 2.5%
+ very -- 1.9%
+ now -- 1.9%
+ unclear -- 1.8%
+ at -- 1.7%
+ ```
 
 ## Running the Script
 Save the script as `3.LLM_Text_tokenization.py` and execute it using:
