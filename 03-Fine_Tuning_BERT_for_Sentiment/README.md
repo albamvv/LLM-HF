@@ -68,7 +68,11 @@ plt.show()
 
 ### 3. Tokenization
 
-![Alt text](assets/text_to_tokens_conversion.JPG)
+- Transformer models like BERT cannot receive raw strings as input; instead, they assume the text has been tokenized and encoded as numerical vectors.
+- Tokenization is the step of breaking down a string into the atomic units used in the model
+
+<img src="assets/text_to_tokens_conversion.JPG" alt="Descripción" width="300">
+
 
 
 Transformer models like BERT cannot process raw text directly. Instead, text must be tokenized and converted into numerical vectors. We use the BERT tokenizer for this:
