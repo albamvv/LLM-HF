@@ -278,9 +278,70 @@ num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
-pprint(model.config)
+print(model)
 ```
+- `config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)`
 
+-   -   Loads the configuration for a pre-trained model from `model_ckpt`.
+
+-   -   It customizes the configuration by specifying `label2id` (mapping labels to IDs) and `id2label` (mapping IDs back to labels).
+
+-   -   This is useful for classification tasks, ensuring the model correctly associates outputs with labels.
+
+`model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)`
+
+-   -   Loads a pre-trained model designed for sequence classification from `model_ckpt`.
+
+-   -   Uses the previously defined `config` to ensure the model has the correct label mappings.
+
+-   -   Moves the model to the appropriate device (`cuda` or `cpu`) for computation.
+```sh
+BertForSequenceClassification(
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSdpaSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=6, bias=True)
+)
+```
 ---
 
 ## **8. Setting Training Arguments**

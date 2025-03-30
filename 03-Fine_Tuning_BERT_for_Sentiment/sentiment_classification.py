@@ -92,27 +92,26 @@ def tokenize(batch):
 emotion_encoded = dataset.map(tokenize, batched=True, batch_size=None)
 #pprint(emotion_encoded['train'][0])
 
-
 # label2id, id2label
 label2id = {x['label_name']:x['label'] for x in dataset['train']}
 #print(label2id)
 id2label = {v:k for k,v in label2id.items()}
 #print(id2label)
 
-
 # ----- Model building -----
 model = AutoModel.from_pretrained(model_ckpt)
-print(model.config.id2label)
+#print(model.config.id2label)
 #print(model.config)
 
-'''
  # --- Fine tunning transformers ---
 num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
+print(model)
 
 
+'''
 
 batch_size = 64
 training_dir = "bert_base_train_dir"
