@@ -71,7 +71,7 @@ plt.show()
 - Transformer models like BERT cannot receive raw strings as input; instead, they assume the text has been tokenized and encoded as numerical vectors.
 - Tokenization is the step of breaking down a string into the atomic units used in the model
 
-<img src="assets/text_to_tokens_conversion.JPG" alt="Descripción" width="300">
+<img src="assets/text_to_tokens_conversion.JPG" alt="Descripción" width="500">
 
 
 
