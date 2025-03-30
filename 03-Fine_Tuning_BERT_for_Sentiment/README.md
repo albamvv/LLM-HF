@@ -68,7 +68,11 @@ plt.show()
 
 ### 3. Tokenization
 
+![Alt text](assets/text_to_tokens_conversion.JPG)
+
+
 Transformer models like BERT cannot process raw text directly. Instead, text must be tokenized and converted into numerical vectors. We use the BERT tokenizer for this:
+
 
 ```python
 model_ckpt = "bert-base-uncased"
