@@ -265,16 +265,21 @@ BertConfig {
 ---
 
 ## **7. Fine-Tuning the Transformer Model**
-```python
 
+- Configures the model with **custom label mappings**.
+- Moves the model to **GPU (if available)** for faster training.
+- `AutoModelForSequenceClassification` model has a classification head on top of the pretrained model outputs
+- The first thing we need is a pretrained BERT model like the one we used in the feature-based approach.
+- The only slight modification is that we use the `AutoModelForSequenceClassification` model instead of AutoModel.
+- The difference is that the `AutoModelForSequenceClassification` model has a classification head on top of the pretrained model outputs, which can be easily trained with the base model.
+
+```python
 num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
 pprint(model.config)
 ```
-- Configures the model with **custom label mappings**.
-- Moves the model to **GPU (if available)** for faster training.
 
 ---
 

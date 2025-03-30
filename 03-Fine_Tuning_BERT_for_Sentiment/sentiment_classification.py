@@ -99,11 +99,13 @@ label2id = {x['label_name']:x['label'] for x in dataset['train']}
 id2label = {v:k for k,v in label2id.items()}
 #print(id2label)
 
-'''
+
 # ----- Model building -----
 model = AutoModel.from_pretrained(model_ckpt)
-model.config.id2label
+print(model.config.id2label)
+#print(model.config)
 
+'''
  # --- Fine tunning transformers ---
 num_labels = len(label2id)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
