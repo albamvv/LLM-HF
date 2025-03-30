@@ -288,7 +288,7 @@ print(model)
 
     - This is useful for classification tasks, ensuring the model correctly associates outputs with labels.
 
-`model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)`.
+- `model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)`.
 
     - Loads a pre-trained model designed for sequence classification from `model_ckpt`.
 
