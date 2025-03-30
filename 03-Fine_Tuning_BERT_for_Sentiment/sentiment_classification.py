@@ -123,7 +123,7 @@ training_args = TrainingArguments( output_dir=training_dir,
                                   disable_tqdm = False
 )
 
-'''
+
 #----------- Build model and trainer --------------
 
 trainer = Trainer(model=model, args=training_args,
@@ -133,6 +133,8 @@ trainer = Trainer(model=model, args=training_args,
                   tokenizer = tokenizer)
 
 print(trainer.train())
+
+'''
 
 #------------- Model evaluation --------
 

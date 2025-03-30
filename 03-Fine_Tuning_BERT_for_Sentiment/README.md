@@ -345,7 +345,7 @@ BertForSequenceClassification(
 ```
 ---
 
-## **8. Setting Training Arguments**
+## **8. Setting Training Arguments and Building the Trainer**
 ```python
 batch_size = 64
 training_dir = "bert_base_train_dir"
@@ -362,8 +362,11 @@ training_args = TrainingArguments(
     di
 ```
 
+**Building the Trainer**
 
-## **9. Building the Trainer**
+- Initializes **Hugging Face's Trainer** for supervised training.
+- **Fine-tunes** the model using training and validation datasets.
+
 ```python
 trainer = Trainer(
     model=model,
@@ -373,14 +376,28 @@ trainer = Trainer(
     eval_dataset=emotion_encoded['validation'],
     tokenizer=tokenizer
 )
+
+```
+
+- **`model=model`** → Specifies the transformer model to train.  
+- **`args=training_args`** → Contains training configurations such as batch size, learning rate, number of epochs, etc.  
+- **`compute_metrics=compute_metrics`** → A function to evaluate performance (e.g., accuracy, F1-score).  
+- **`train_dataset=emotion_encoded['train']`** → The training dataset, already tokenized and preprocessed.  
+- **`eval_dataset=emotion_encoded['validation']`** → The validation dataset used for model evaluation.  
+- **`tokenizer=tokenizer`** → The tokenizer used for text preprocessing (ensures consistency with the model).  
+
+```python
 print(trainer.train())
 ```
-- Initializes **Hugging Face's Trainer** for supervised training.
-- **Fine-tunes** the model using training and validation datasets.
+Calls the `train()` method of `Trainer`, which:  
+
+- Fine-tunes the model on the training dataset.  
+- Evaluates it on the validation dataset after each epoch.  
+- Saves the best-performing model and logs training progress.  
 
 ---
 
-## **10. Model Evaluation**
+## **9. Model Evaluation**
 ```python
 preds_output = trainer.predict(emotion_encoded['test'])
 preds_output.metrics
@@ -413,7 +430,7 @@ plt.show()
 
 ---
 
-## **11. Saving the Model and Making Predictions**
+## **10. Saving the Model and Making Predictions**
 ```python
 text = "I am super happy today. I got it done. Finally!!"
 get_prediction(text)
@@ -424,7 +441,7 @@ trainer.save_model("bert-base-uncased-sentiment-model")
 
 ---
 
-## **12. Loading the Model for Inference**
+## **11. Loading the Model for Inference**
 ```python
 classifier = pipeline('text-classification', model='bert-base-uncased-sentiment-model')
 classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
