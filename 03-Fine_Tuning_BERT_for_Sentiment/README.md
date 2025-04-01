@@ -168,7 +168,7 @@ pprint(dataset['train'][1])
          'thing that they re saying'}
 ```
 
-Next, we apply **tokenization** to the dataset:
+#### **tokenization** 
 
 ```python
 def tokenize(batch):
