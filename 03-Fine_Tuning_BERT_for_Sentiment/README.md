@@ -151,9 +151,7 @@ dataset = dataset.map(tokenize, batched=True, batch_size=None)
 
 #### Mapping Labels
 
-Since machine learning models work with numerical labels, we create mappings:
-
-**Dictionary mapping label names to numerical IDs**
+- Dictionary mapping label names to numerical IDs
 - The resulting dictionary maps sentiment names to numerical IDs. 
 ```python
 label2id = {x['label_name']: x['label'] for x in dataset['train']}
@@ -303,7 +301,7 @@ BertForSequenceClassification(
 ```
 ---
 
-## **6. Setting Training Arguments and Building the Trainer**
+#### Setting Training Arguments and Building the Trainer
 ```python
 batch_size = 64
 training_dir = "bert_base_train_dir"
@@ -360,7 +358,7 @@ print(trainer.train())
 ```
 ---
 
-## **9. Model Evaluation**
+## **6. Model Evaluation**
 - Evaluates the model on the **test dataset**.
 - **Generates accuracy metrics**.
 
@@ -407,16 +405,16 @@ Output:
 ```sh
               precision    recall  f1-score   support
 
-           0       0.20      0.02      0.04       933
-           1       0.50      0.00      0.00      1072
-           2       0.08      0.05      0.06       261
-           3       0.15      0.04      0.06       432
-           4       0.11      0.82      0.20       387
-           5       0.00      0.00      0.00       115
+           0       0.93      0.97      0.95       933
+           1       0.91      0.92      0.91      1072
+           2       0.79      0.74      0.76       261
+           3       0.94      0.93      0.93       432
+           4       0.86      0.87      0.87       387
+           5       0.89      0.61      0.72       115
 
-    accuracy                           0.12      3200
-   macro avg       0.17      0.15      0.06      3200
-weighted avg       0.27      0.12      0.05      3200
+    accuracy                           0.90      3200
+   macro avg       0.89      0.84      0.86      3200
+weighted avg       0.90      0.90      0.90      3200
 ```
 
 
@@ -434,10 +432,11 @@ plt.xlabel("Predicted")
 plt.show()
 ```
 
-![alt text](sentiment_cm.JPG)
+![alt text](assets/sentiment_cm.JPG)
 ---
 
-## **10. Saving the Model and Making Predictions**
+## **7. Build Prediction Function and Store Model**
+
 ```python
 text = "I am super happy today. I got it done. Finally!!"
 get_prediction(text)
@@ -448,7 +447,7 @@ trainer.save_model("bert-base-uncased-sentiment-model")
 
 ---
 
-## **11. Loading the Model for Inference**
+#### Loading the Model for Inference
 ```python
 classifier = pipeline('text-classification', model='bert-base-uncased-sentiment-model')
 classifier([text, 'hello, how are you?', "love you", "i am feeling low"])
