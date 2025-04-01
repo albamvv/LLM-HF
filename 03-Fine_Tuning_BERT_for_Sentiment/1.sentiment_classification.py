@@ -3,7 +3,7 @@ from pprint import pprint
 from transformers import AutoModel 
 from imports import*
 import seaborn as sns
-from utils import compute_metrics,compute_metrics_evaluate, get_prediction,split_dataset, get_training_args, create_trainer
+from utils import compute_metrics,compute_metrics_evaluate, get_prediction,split_dataset, get_training_args, create_trainer,plot_tweet_analysis
 
 # Load the CSV file from local storage
 df = pd.read_csv("assets/twitter_sentiment.csv")
@@ -12,36 +12,9 @@ df = pd.read_csv("assets/twitter_sentiment.csv")
 #print(df['label'].value_counts()) # Count occurrences of each category in the 'label' column
 
 # ----------------- Data analysis ------------------------
-label_counts = df['label_name'].value_counts(ascending=True) # Count the frequency of each category in the 'label_name' column
-df['Words per Tweet'] = df['text'].str.split().apply(len) # Calculate the number of words per tweet
-#print("Words per Tweet-> ",df['Words per Tweet'])
-# Create a figure with two subplots
-fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+plot_tweet_analysis(df)
 
-'''
-
-# ----------------- Bar Plot: Frequency of Classes ------------------------
-label_counts = df['label_name'].value_counts(ascending=True)
-label_counts.plot.barh(ax=axes[0])  # Plot on the first subplot
-axes[0].set_title("Frequency of Classes")
-axes[0].set_xlabel("Count")
-axes[0].set_ylabel("Label")
-
-# ----------------- Box Plot: Words per Tweet by Sentiment ------------------------
-df.boxplot(column="Words per Tweet", by="label_name", ax=axes[1], grid=False)
-axes[1].set_title("Words per Tweet by Sentiment")
-axes[1].set_xlabel("Sentiment")
-axes[1].set_ylabel("Word Count")
-
-# Adjust layout and remove automatic boxplot title
-plt.suptitle("")  
-plt.tight_layout()
-plt.show() # Show the plots
-
-'''
 # ----------------------- Text to Tokens Conversion ----------------------
-#- Transformer models like BERT cannot receive raw strings as input; instead, they assume the text has been tokenized and encoded as numerical vectors.
-#- Tokenization is the step of breaking down a string into the atomic units used in the model
 model_ckpt = "bert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
 text = "I love machine learning! Tokenization is awesome!!"
@@ -73,7 +46,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2label)
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
 #print(model)
-
 training_dir = "bert_base_train_dir"
 training_args = get_training_args(batch_size=64, training_dir=training_dir)
 
@@ -90,7 +62,6 @@ y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = emotion_encoded['test'][:]['label']
 print("clasification report-> ")
 print(classification_report(y_true, y_pred))
-
 
 cm = confusion_matrix(y_true, y_pred)
 

@@ -2,8 +2,8 @@
 from utils import split_dataset, compute_metrics_evaluate, get_training_args, create_trainer
 from imports import*
 
-# Load the CSV file from local storage
-df = pd.read_csv("assets/fake_news.csv")
+# Load the EXCEL file from local storage
+df = pd.read_excel("assets/fake_news.xlsx")
 
 # ----------------- Data analysis ------------------------
 label_counts = df['label'].value_counts(ascending=True)
@@ -78,6 +78,11 @@ preds_output = trainer.predict(encoded_dataset['test'])
 y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = encoded_dataset['test'][:]['label']
 print(classification_report(y_true, y_pred, target_names=list(label2id)))
+
+# ---------------Model load and 
+trainer.save_model("fake_news")
+classifier = pipeline('text-classification', model= 'fake_news')
+classifier("some text data")
 
 
 

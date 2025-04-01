@@ -11,16 +11,13 @@ Before running the script, ensure you have the required Python libraries install
 pip install pandas matplotlib transformers datasets scikit-learn torch
 ```
 
-## Steps to Run the Code
+## Implementation
 
 ### 1. Load and Analyze Data
 
 The dataset used in this project is stored as a CSV file. We first load it into a Pandas DataFrame:
 
 ```python
-import pandas as pd
-import matplotlib.pyplot as plt
-
 df = pd.read_csv("assets/twitter_sentiment.csv")
 ```
 
@@ -38,32 +35,6 @@ print(df['label'].value_counts())  # Shows the count of each sentiment category
 
 To gain insights into the data distribution, we create plots for class frequency and word count per tweet.
 
-#### Plot Class Distribution
-
-```python
-label_counts = df['label_name'].value_counts(ascending=True)
-fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-label_counts.plot.barh(ax=axes[0])  # Horizontal bar plot
-axes[0].set_title("Frequency of Classes")
-axes[0].set_xlabel("Count")
-axes[0].set_ylabel("Label")
-```
-
-#### Plot Word Count Distribution
-
-We calculate the number of words per tweet and create a box plot:
-
-```python
-df['Words per Tweet'] = df['text'].str.split().apply(len)
-df.boxplot(column="Words per Tweet", by="label_name", ax=axes[1], grid=False)
-axes[1].set_title("Words per Tweet by Sentiment")
-axes[1].set_xlabel("Sentiment")
-axes[1].set_ylabel("Word Count")
-
-plt.suptitle("")  # Remove automatic title
-plt.tight_layout()
-plt.show()
-```
 ![Alt text](assets/sentiment_data_visualization.JPG)
 
 ### 3. Text to Tokens Conversion

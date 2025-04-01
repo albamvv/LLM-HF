@@ -7,6 +7,33 @@ import matplotlib.pyplot as plt
 from transformers import TrainingArguments
 from transformers import Trainer
 
+import matplotlib.pyplot as plt
+
+def plot_tweet_analysis(df):
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    
+    # Contar la frecuencia de cada etiqueta
+    label_counts = df['label_name'].value_counts(ascending=True)
+    
+    # Calcular el número de palabras por tweet
+    df['Words per Tweet'] = df['text'].str.split().apply(len)
+    
+    # Graficar la frecuencia de clases
+    label_counts.plot.barh(ax=axes[0])
+    axes[0].set_title("Frequency of Classes")
+    axes[0].set_xlabel("Count")
+    axes[0].set_ylabel("Label")
+    
+    # Box Plot: Palabras por tweet según el sentimiento
+    df.boxplot(column="Words per Tweet", by="label_name", ax=axes[1], grid=False)
+    axes[1].set_title("Words per Tweet by Sentiment")
+    axes[1].set_xlabel("Sentiment")
+    axes[1].set_ylabel("Word Count")
+    
+    # Ajustar el diseño y eliminar el título automático del boxplot
+    plt.suptitle("")  
+    plt.tight_layout()
+    plt.show()
 
 accuracy = evaluate.load("accuracy")
 
