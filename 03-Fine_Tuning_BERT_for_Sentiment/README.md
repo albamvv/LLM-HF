@@ -431,7 +431,7 @@ plt.ylabel("Actual")
 plt.xlabel("Predicted")
 plt.show()
 ```
-<img src="assets/sentiment_cm.JPG" alt="Descripción" width="600">
+<img src="assets/sentiment_cm.JPG" alt="Descripción" width="400">
 ---
 
 ## **7. Build Prediction Function and Store Model**
