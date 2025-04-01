@@ -131,22 +131,18 @@ trainer = Trainer(model=model, args=training_args,
                   train_dataset = emotion_encoded['train'],
                   eval_dataset = emotion_encoded['validation'],
                   tokenizer = tokenizer)
+#print(trainer.train())
 
-print(trainer.train())
-
-'''
 
 #------------- Model evaluation --------
 
 preds_output = trainer.predict(emotion_encoded['test'])
-preds_output.metrics
+print("metrics -> ",preds_output.metrics)
+print("prediction-> ", preds_output.predictions)
 
 y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = emotion_encoded['test'][:]['label']
-
-
-print(classification_report(y_true, y_pred))
-print(label2id)
+print("clasification report-> ",classification_report(y_true, y_pred))
 
 
 cm = confusion_matrix(y_true, y_pred)
@@ -157,6 +153,7 @@ plt.ylabel("Actual")
 plt.xlabel("Predicted")
 plt.show()
 
+'''
 # ----------- Build prediction function and store model
 
 text = "I am super happy today. I got it done. Finally!!"

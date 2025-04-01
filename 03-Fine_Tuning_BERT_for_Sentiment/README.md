@@ -386,24 +386,40 @@ trainer = Trainer(
 - **`eval_dataset=emotion_encoded['validation']`** → The validation dataset used for model evaluation.  
 - **`tokenizer=tokenizer`** → The tokenizer used for text preprocessing (ensures consistency with the model).  
 
+
+Calls the `train()` method of `Trainer`, which:  
+
 ```python
 print(trainer.train())
 ```
-Calls the `train()` method of `Trainer`, which:  
 
 - Fine-tunes the model on the training dataset.  
 - Evaluates it on the validation dataset after each epoch.  
 - Saves the best-performing model and logs training progress.  
 
+```sh
+{'eval_loss': 0.4704403281211853, 'eval_accuracy': 0.85125, 'eval_f1': 0.8406753408569184, 'eval_runtime': 4.4954, 'eval_samples_per_second': 355.92, 'eval_steps_per_second': 5.561, 'epoch': 1.0}
+```
 ---
 
 ## **9. Model Evaluation**
-```python
-preds_output = trainer.predict(emotion_encoded['test'])
-preds_output.metrics
-```
 - Evaluates the model on the **test dataset**.
 - **Generates accuracy metrics**.
+
+```python
+preds_output = trainer.predict(emotion_encoded['test'])
+print(preds_output.metrics)
+```
+
+```sh
+{'test_loss': 0.2910054922103882,
+ 'test_accuracy': 0.9028125,
+ 'test_f1': 0.9010784813634883,
+ 'test_runtime': 78.7905,
+ 'test_samples_per_second': 40.614,
+ 'test_steps_per_second': 0.635}
+ ```
+
 
 #### **Extract Predictions and Compare with True Labels**
 ```python
