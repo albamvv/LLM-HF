@@ -111,33 +111,22 @@ DatasetDict({
     })
 })
 ```
-**First print**
+**Dataset train**
 ```python
-pprint(dataset['train'][0])
+pprint(dataset['train'][0]), pprint(dataset['train'][1])
 ```
 
 ```sh
-{'Words per Tweet': 9,
- 'label': 1,
- 'label_name': 'joy',
- 'text': 'i think we ll feel pretty good about that'}
-```
-**Second print**
-```python
-pprint(dataset['train'][1])
+({'text': 'i feel im being generous with that statement',
+  'label': 2,
+  'label_name': 'love',
+  'Words per Tweet': 8},
+ {'text': 'i make them feel valued and included even when we don t see each other often that it s one of my superpowers',
+  'label': 1,
+  'label_name': 'joy',
+  'Words per Tweet': 23})
 ```
 
-```sh
-{'Words per Tweet': 32,
- 'label': 3,
- 'label_name': 'anger',
- 'text': 'i feel like i m so distracted by silly things like twitter that i '
-         'can spend an entire evening with the kids and not actually hear a '
-         'thing that they re saying'}
- 'text': 'i feel like i m so distracted by silly things like twitter that i '
-         'can spend an entire evening with the kids and not actually hear a '
-         'thing that they re saying'}
-```
 
 #### **Tokenization** 
 
@@ -160,7 +149,7 @@ dataset = dataset.map(tokenize, batched=True, batch_size=None)
 ```
 
 
-### 5. Mapping Labels
+#### Mapping Labels
 
 Since machine learning models work with numerical labels, we create mappings:
 
@@ -189,7 +178,7 @@ Some weights of BertForSequenceClassification were not initialized from the mode
 ```
 ---
 
-### 6. Model building
+### 4. Model building
 
 - Loads a **pretrained BERT model**.
 - Retrieves **id-to-label mapping** to check sentiment classes.
@@ -233,7 +222,7 @@ BertConfig {
 
 ---
 
-## **7. Fine-Tuning the Transformer Model**
+## **5. Fine-Tuning the Transformer Model**
 
 - Configures the model with **custom label mappings**.
 - Moves the model to **GPU (if available)** for faster training.
@@ -314,7 +303,7 @@ BertForSequenceClassification(
 ```
 ---
 
-## **8. Setting Training Arguments and Building the Trainer**
+## **6. Setting Training Arguments and Building the Trainer**
 ```python
 batch_size = 64
 training_dir = "bert_base_train_dir"
