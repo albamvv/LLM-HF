@@ -22,6 +22,36 @@ def compute_metrics(pred):
 
     return {"accuracy": acc, "f1": f1}
 
+from sklearn.model_selection import train_test_split
+from datasets import Dataset, DatasetDict
+
+def split_dataset(df, label_column):
+    """
+    Divide un DataFrame en conjuntos de entrenamiento (70%), prueba (20%) y validación (10%).
+    
+    Parámetros:
+    df (pd.DataFrame): El DataFrame de entrada.
+    label_column (str): El nombre de la columna de etiqueta para la estratificación.
+    
+    Retorna:
+    DatasetDict: Un diccionario con los conjuntos 'train', 'test' y 'validation'.
+    """
+    train, test = train_test_split(df, test_size=0.3, stratify=df[label_column])
+    test, validation = train_test_split(test, test_size=1/3, stratify=test[label_column])
+    
+    dataset = DatasetDict(
+        {
+            "train": Dataset.from_pandas(train, preserve_index=False),
+            "test": Dataset.from_pandas(test, preserve_index=False),
+            "validation": Dataset.from_pandas(validation, preserve_index=False)
+        }
+    )
+    
+    return dataset
+
+
+
+
 def get_prediction(text):
     input_encoded = tokenizer(text, return_tensors='pt').to(device)
 

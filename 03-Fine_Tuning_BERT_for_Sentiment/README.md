@@ -64,16 +64,14 @@ plt.suptitle("")  # Remove automatic title
 plt.tight_layout()
 plt.show()
 ```
-![Alt text](assets/data_visualization.JPG)
+![Alt text](assets/sentiment_data_visualization.JPG)
 
-### 3. Tokenization
+### 3. Text to Tokens Conversion
 
 - Transformer models like BERT cannot receive raw strings as input; instead, they assume the text has been tokenized and encoded as numerical vectors.
 - Tokenization is the step of breaking down a string into the atomic units used in the model
 
-<img src="assets/text_to_tokens_conversion.JPG" alt="Descripción" width="600">
-
-
+<img src="assets/sentiment_text_to_tokens_conversion.JPG" alt="Descripción" width="600">
 
 Transformer models like BERT cannot process raw text directly. Instead, text must be tokenized and converted into numerical vectors. We use the BERT tokenizer for this:
 
@@ -433,6 +431,9 @@ print(label2id)
 - Prints a **classification report** (precision, recall, F1-score).
 
 #### **Confusion Matrix for Performance Visualization**
+
+- Generates a **confusion matrix** to visualize predictions.
+
 ```python
 cm = confusion_matrix(y_true, y_pred)
 
@@ -442,8 +443,8 @@ plt.ylabel("Actual")
 plt.xlabel("Predicted")
 plt.show()
 ```
-- Generates a **confusion matrix** to visualize predictions.
 
+![alt text](sentiment_cm.JPG)
 ---
 
 ## **10. Saving the Model and Making Predictions**
