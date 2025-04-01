@@ -168,7 +168,7 @@ pprint(dataset['train'][1])
          'thing that they re saying'}
 ```
 
-#### **tokenization** 
+#### **Tokenization** 
 
 ```python
 def tokenize(batch):
@@ -418,17 +418,47 @@ print(preds_output.metrics)
  'test_steps_per_second': 0.635}
  ```
 
+```python
+print("prediction-> ", preds_output.predictions)
+```
+```sh
+prediction->  [[ 0.0282896  -0.08114642  0.06655718 -0.00595495  0.10375535 -0.4711358 ]
+ [ 0.07620856 -0.06400272 -0.07737386  0.07860108  0.18747526 -0.70775473]
+ [ 0.00118896  0.046087   -0.01763783  0.08499105  0.3077351  -0.5842899 ]
+ ...
+ [ 0.04992387 -0.02515396 -0.06693205  0.05518708  0.17695536 -0.6794509 ]
+ [ 0.00617925  0.00945055 -0.12231163  0.10678159  0.25323462 -0.41708013]
+ [ 0.1146573  -0.02647142 -0.10754436  0.11124374  0.1564457  -0.48860702]]
+ ```
 
 #### **Extract Predictions and Compare with True Labels**
+
+- Converts **model logits** into class predictions.
+- Prints a **classification report** (precision, recall, F1-score).
+
 ```python
 y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = emotion_encoded['test'][:]['label']
 
 print(classification_report(y_true, y_pred))
-print(label2id)
 ```
-- Converts **model logits** into class predictions.
-- Prints a **classification report** (precision, recall, F1-score).
+Output: 
+
+```sh
+              precision    recall  f1-score   support
+
+           0       0.20      0.02      0.04       933
+           1       0.50      0.00      0.00      1072
+           2       0.08      0.05      0.06       261
+           3       0.15      0.04      0.06       432
+           4       0.11      0.82      0.20       387
+           5       0.00      0.00      0.00       115
+
+    accuracy                           0.12      3200
+   macro avg       0.17      0.15      0.06      3200
+weighted avg       0.27      0.12      0.05      3200
+```
+
 
 #### **Confusion Matrix for Performance Visualization**
 

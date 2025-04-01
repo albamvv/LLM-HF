@@ -1,19 +1,9 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-from transformers import AutoTokenizer
 from sklearn.model_selection import train_test_split
-from datasets import Dataset, DatasetDict
 from pprint import pprint
 from transformers import AutoModel 
-import torch
-from transformers import AutoModelForSequenceClassification, AutoConfig
-from sklearn.metrics import classification_report, confusion_matrix
-from transformers import TrainingArguments
-from transformers import Trainer
-from transformers import pipeline
-import numpy as np
+from imports import*
 import seaborn as sns
-from utils import compute_metrics,compute_metrics_evaluate, get_prediction,split_dataset
+from utils import compute_metrics,compute_metrics_evaluate, get_prediction,split_dataset, get_training_args, create_trainer
 
 # Load the CSV file from local storage
 df = pd.read_csv("assets/twitter_sentiment.csv")
@@ -22,17 +12,13 @@ df = pd.read_csv("assets/twitter_sentiment.csv")
 #print(df['label'].value_counts()) # Count occurrences of each category in the 'label' column
 
 # ----------------- Data analysis ------------------------
-
-# Count the frequency of each category in the 'label_name' column
-label_counts = df['label_name'].value_counts(ascending=True)
-# Calculate the number of words per tweet
-df['Words per Tweet'] = df['text'].str.split().apply(len)
+label_counts = df['label_name'].value_counts(ascending=True) # Count the frequency of each category in the 'label_name' column
+df['Words per Tweet'] = df['text'].str.split().apply(len) # Calculate the number of words per tweet
 #print("Words per Tweet-> ",df['Words per Tweet'])
-
 # Create a figure with two subplots
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-
+'''
 
 # ----------------- Bar Plot: Frequency of Classes ------------------------
 label_counts = df['label_name'].value_counts(ascending=True)
@@ -52,7 +38,7 @@ plt.suptitle("")
 plt.tight_layout()
 plt.show() # Show the plots
 
-
+'''
 # ----------------------- Text to Tokens Conversion ----------------------
 #- Transformer models like BERT cannot receive raw strings as input; instead, they assume the text has been tokenized and encoded as numerical vectors.
 #- Tokenization is the step of breaking down a string into the atomic units used in the model
@@ -72,17 +58,14 @@ def tokenize(batch):
 
 #print(tokenize(dataset['train'][:2]))
 emotion_encoded = dataset.map(tokenize, batched=True, batch_size=None) 
-#pprint(emotion_encoded['train'][0])
+pprint(emotion_encoded['train'][0])
 
 label2id = {x['label_name']:x['label'] for x in dataset['train']}
-#print(label2id)
 id2label = {v:k for k,v in label2id.items()}
-#print(id2label)
 
 # ----- Model building -----
 model = AutoModel.from_pretrained(model_ckpt)
-#print(model.config.id2label)
-#print(model.config)
+#print(model.config.id2label) #print(model.config)
 
  # --- Fine tunning transformers ---
 num_labels = len(label2id)
@@ -91,35 +74,17 @@ config = AutoConfig.from_pretrained(model_ckpt, label2id=label2id, id2label=id2l
 model = AutoModelForSequenceClassification.from_pretrained(model_ckpt, config=config).to(device)
 #print(model)
 
-batch_size = 64
 training_dir = "bert_base_train_dir"
-training_args = TrainingArguments( output_dir=training_dir,
-                                  overwrite_output_dir = True,
-                                  num_train_epochs = 2,
-                                  learning_rate = 2e-5,
-                                  per_device_train_batch_size = batch_size,
-                                  per_device_eval_batch_size = batch_size,
-                                  weight_decay = 0.01,
-                                  evaluation_strategy = 'epoch',
-                                  disable_tqdm = False
-)
-
+training_args = get_training_args(batch_size=64, training_dir=training_dir)
 
 #----------- Build model and trainer --------------
-
-trainer = Trainer(model=model, args=training_args,
-                  compute_metrics=compute_metrics,
-                  train_dataset = emotion_encoded['train'],
-                  eval_dataset = emotion_encoded['validation'],
-                  tokenizer = tokenizer)
+trainer = create_trainer(model, training_args, compute_metrics,emotion_encoded, tokenizer)
 #print(trainer.train())
 
-
 #------------- Model evaluation --------
-
 preds_output = trainer.predict(emotion_encoded['test'])
-print("metrics -> ",preds_output.metrics)
-print("prediction-> ", preds_output.predictions)
+#print("metrics -> ",preds_output.metrics)
+#print("prediction-> ", preds_output.predictions)
 
 y_pred = np.argmax(preds_output.predictions, axis=1)
 y_true = emotion_encoded['test'][:]['label']

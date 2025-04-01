@@ -4,6 +4,9 @@ from sklearn.metrics import accuracy_score, f1_score
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
+from transformers import TrainingArguments
+from transformers import Trainer
+
 
 accuracy = evaluate.load("accuracy")
 
@@ -11,6 +14,8 @@ def compute_metrics_evaluate(eval_pred):
     predictions, labels = eval_pred
     predictions = np.argmax(predictions, axis=1)
     return accuracy.compute(predictions=predictions, references=labels)
+
+accuracy = evaluate.load("accuracy")
 
 
 def compute_metrics(pred):
@@ -49,6 +54,32 @@ def split_dataset(df, label_column):
     
     return dataset
 
+
+
+def get_training_args(batch_size=32, training_dir="train_dir"):
+    return TrainingArguments(
+        output_dir=training_dir,
+        overwrite_output_dir=True,
+        num_train_epochs=2,
+        learning_rate=2e-5,
+        per_device_train_batch_size=batch_size,
+        per_device_eval_batch_size=batch_size,
+        weight_decay=0.01,
+        evaluation_strategy='epoch'
+    )
+
+
+
+def create_trainer(model, training_args, compute_metrics, encoded_dataset, tokenizer):
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        compute_metrics=compute_metrics,
+        train_dataset=encoded_dataset['train'],
+        eval_dataset=encoded_dataset['validation'],
+        tokenizer=tokenizer
+    )
+    return trainer
 
 
 
