@@ -31,13 +31,13 @@ print(df.isnull().sum())  # Checks for missing values in each column
 print(df['label'].value_counts())  # Shows the count of each sentiment category
 ```
 
-### 2. Visualizing Data
+#### Visualizing Data
 
 To gain insights into the data distribution, we create plots for class frequency and word count per tweet.
 
 ![Alt text](assets/sentiment_data_visualization.JPG)
 
-### 3. Text to Tokens Conversion
+### 2. Text to Tokens Conversion
 
 - Transformer models like BERT cannot receive raw strings as input; instead, they assume the text has been tokenized and encoded as numerical vectors.
 - Tokenization is the step of breaking down a string into the atomic units used in the model
@@ -75,7 +75,7 @@ print('input_id: ', input_ids)
 input_id:  tensor([[  101,  1045,  2293,  3698,  4083,   999, 19204,  3989,  2003, 12476,
            999,   999,   102]])
 ```
-### 4. Splitting Data and Creating Dataset
+### 3. Splitting Data and Creating Dataset
 
 To train the model, we split the dataset into training, validation, and testing sets:
 
