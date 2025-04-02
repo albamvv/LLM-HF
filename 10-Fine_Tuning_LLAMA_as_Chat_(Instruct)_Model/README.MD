@@ -18,6 +18,25 @@ The script loads the `ultrachat_200k` dataset from Hugging Face and shuffles it,
 ```python
 dataset = load_dataset("HuggingFaceH4/ultrachat_200k", trust_remote_code=True, split="train_sft")
 dataset = dataset.shuffle(seed=0).select(range(10_000))
+print(dataset[0])
+```
+```sh
+{'prompt': '3. Heat the vegetables in boiling water for the recommended time.', 'prompt_id': '827b4bc3c5d8646e574bd741d65f7de92057be4f1fb1a4456d5f136cf7397568', 'messages': [{'content': '3. Heat the vegetables in boiling water for the recommended time.', 'role': 'user'}, {'content': 'I do not have information about the specific type of vegetables being referred to. However, here are general instructions for boiling most vegetables:\n\n1. Wash the vegetables thoroughly with clean water.\n2. Cut the vegetables into small or medium-sized pieces.\n3. Bring a pot of water to boil on the stove.\n4. Add a pinch of salt to the boiling water.\n5. Add the vegetables to the boiling water.\n6. Cook the vegetables for the recommended time (see cooking instructions on the package or look up cooking times for specific vegetables online).\n7. Test the vegetables for doneness using a fork or a knife. They should be tender but not overcooked and mushy.\n8. Once the vegetables are cooked 
+to your desired tenderness, remove them from the boiling water using a slotted spoon or a strainer.\n9. Drain the vegetables and serve hot with your favorite seasonings or sauce.', 'role': 'assistant'}, {'content': 'Can you add some information on how to prevent the vegetables from getting too soft or overcooked?', 'role': 'user'}, {'content': "Certainly, here are some tip
+```
+- Load the model
+```python
+template_tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+print(template_tokenizer)
+```
+
+```sh
+LlamaTokenizerFast(name_or_path='TinyLlama/TinyLlama-1.1B-Chat-v1.0', vocab_size=32000, model_max_length=2048, is_fast=True, padding_side='right', truncation_side='right', special_tokens={'bos_token': '<s>', 'eos_token': '</s>', 'unk_token': '<unk>', 'pad_token': '</s>'}, clean_up_tokenization_spaces=False, added_tokens_decoder={
+        0: AddedToken("<unk>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+        1: AddedToken("<s>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+        2: AddedToken("</s>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=True),
+}
+)
 ```
 
 It also defines a function `format_prompt()` to structure chat messages into the expected format:

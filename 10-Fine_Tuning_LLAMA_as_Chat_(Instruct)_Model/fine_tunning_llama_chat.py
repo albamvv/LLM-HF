@@ -1,20 +1,19 @@
 from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers import pipeline
-from peft import AutoPeftModelForCausalLM
 from transformers import TrainingArguments, Trainer
 from trl import SFTTrainer
-from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
+from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model, AutoPeftModelForCausalLM
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 
 #------------------ Normalized quantization --------------------
 dataset = load_dataset("HuggingFaceH4/ultrachat_200k", trust_remote_code=True, split="train_sft")
 dataset = dataset.shuffle(seed=0).select(range(10_000))
-#print(dataset) 
-print(dataset[0])
+#print(dataset) #print(dataset[0])
 
 template_tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+print(template_tokenizer)
 
 def format_prompt(example):
   """Format the prompt using the <|user|> and <|assistant|> format"""
@@ -25,7 +24,7 @@ def format_prompt(example):
 #print(format_prompt(dataset[0])['text'])
 #dataset = dataset.map(format_prompt)
 
-
+'''
 #------------------ Testing base LLAMA Model --------------------
 # base model
 model_name = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
@@ -144,3 +143,5 @@ output = pipe(prompt)
 print(output[0]['generated_text'])
 
 #!zip -r tiny_llama_qlora_adapter.zip TinyLlama-1.1B-qlora
+'
+'''
