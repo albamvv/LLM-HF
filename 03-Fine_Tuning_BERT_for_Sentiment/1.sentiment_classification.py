@@ -17,10 +17,11 @@ plot_tweet_analysis(df)
 # ----------------------- Text to Tokens Conversion ----------------------
 model_ckpt = "bert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
+'''
 text = "I love machine learning! Tokenization is awesome!!"
 encoded_text = tokenizer(text)
 input_ids = tokenizer(text, return_tensors='pt').input_ids  
-
+'''
 #---------- data loader and train test split -----------
 dataset = split_dataset(df, "label_name")  #print(dataset) #pprint(dataset['train'][0]) #pprint(dataset['train'][1])
 
