@@ -9,11 +9,13 @@ Ensure you have the following Python libraries installed:
 ```bash
 pip install datasets transformers peft trl
 ```
+## Normalized Quantization
+- **Normalized Quantization:** QLoRA uses normalized quantization to quantize the low-rank matrices. This technique ensures that the quantized weights are normalized to the same scale as the original weights, preserving the model's performance during fine-tuning.
 
 ![alt text](assets/quantization.JPG)
 
 
-## Steps in the Script
+## Implementation
 
 ### 1. Load and Prepare Dataset
 The script loads the `ultrachat_200k` dataset from Hugging Face and shuffles it, selecting a subset of 10,000 samples.
