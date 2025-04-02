@@ -51,6 +51,27 @@ def format_prompt(example):
     chat = example['messages']
     prompt = template_tokenizer.apply_chat_template(chat, tokenize=False)
     return {'text': prompt}
+print(format_prompt(dataset[0])['text'])
+#dataset = dataset.map(format_prompt)
+```
+```sh
+3. Heat the vegetables in boiling water for the recommended time.</s>
+<|assistant|>
+I do not have information about the specific type of vegetables being referred to. However, here are general instructions for boiling most vegetables:
+
+1. Wash the vegetables thoroughly with clean water.
+2. Cut the vegetables into small or medium-sized pieces.
+3. Bring a pot of water to boil on the stove.
+4. Add a pinch of salt to the boiling water.
+5. Add the vegetables to the boiling water.
+6. Cook the vegetables for the recommended time (see cooking instructions on the package or look up cooking times for specific vegetables online).
+7. Test the vegetables for doneness using a fork or a knife. They should be tender but not overcooked and mushy.
+8. Once the vegetables are cooked to your desired tenderness, remove them from the boiling water using a slotted spoon or a strainer.
+9. Drain the vegetables and serve hot with your favorite seasonings or sauce.</s>
+<|user|>
+Can you add some information on how to prevent the vegetables from getting too soft or overcooked?</s>
+<|assistant|>
+Certainly, here are some tips to prevent vegetables from getting too soft or overcooked:
 ```
 
 ### 2. Test the Base Model
