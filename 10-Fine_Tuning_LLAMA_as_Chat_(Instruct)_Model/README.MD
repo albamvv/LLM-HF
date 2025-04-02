@@ -10,6 +10,9 @@ Ensure you have the following Python libraries installed:
 pip install datasets transformers peft trl
 ```
 
+![alt text](assets/quantization.JPG)
+
+
 ## Steps in the Script
 
 ### 1. Load and Prepare Dataset
