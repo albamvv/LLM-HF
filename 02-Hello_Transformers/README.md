@@ -238,7 +238,7 @@ This will print translated text for the given Chinese input.
 
 
 
-# 3️⃣ LLM Text tokenization
+# 3️⃣ LLM Text generation
 
 
 ## Overview
