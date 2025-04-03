@@ -2,11 +2,9 @@ from transformers import AutoTokenizer,AutoModelForCausalLM, pipeline
 import torch
 
 
-
-# Load the GPT-2 tokenizer and the GPT-2 language model
 tokenizer = AutoTokenizer.from_pretrained("gpt2")  
-gpt2 = AutoModelForCausalLM.from_pretrained("gpt2") # Este modelo es autoregresivo, lo que significa que puede predecir el siguiente token basado en el contexto anterior
-sentence = "The future of AI is" # Define the input sentence
+gpt2 = AutoModelForCausalLM.from_pretrained("gpt2") 
+sentence = "The future of AI is" 
 input_ids = tokenizer(sentence, return_tensors='pt').input_ids  # Tokenize the sentence and convert it into tensor format (PyTorch).
 print('input_id: ', input_ids)  
 
@@ -15,9 +13,7 @@ print('input_id: ', input_ids)
 for token_id in input_ids[0]:  
     print(tokenizer.decode(token_id))  # Print the corresponding token  
 '''
-# Pass the tokenized input to the model to obtain output logits, Devuelve logits con las probabilidades de cada token.
 logits= gpt2(input_ids).logits
-#print('output tensor shape-> ', logits.shape) # Print the shape of the output tensor, which represents model predictions
 #print('logits-> ',logits) # Los logits son valores sin procesar que indican la probabilidad de cada token.
 final_logits = gpt2(input_ids).logits[0,-1] 
 #print('final logits-> ',final_logits)
@@ -26,7 +22,7 @@ final_logits = gpt2(input_ids).logits[0,-1]
 print("Input text->", tokenizer.decode(input_ids[0]))
 #print(final_logits.argmax()) # Token ID <--> Index Location Logits
 next_token= tokenizer.decode(final_logits.argmax()) 
-#print('next token-> ',next_token)
+print('next token-> ',next_token)
 
 # TOP TEN PREDICTIONS
 top_10_logits = torch.topk(final_logits,10)
@@ -38,11 +34,28 @@ top10 =torch.topk(final_logits.softmax(dim=0),10)
 for value, index in zip(top10.values, top10.indices):
     print(f"{tokenizer.decode(index)} -- {value.item():.1%}")
 
-
-
 #next_token = torch.argmax(output.logits[:, -1, :], dim=-1)
 #print('next token-> ',tokenizer.decode(next_token))
 
+#----------------------------------------------
+
+tokenizer = AutoTokenizer.from_pretrained("gpt2")  
+gpt2 = AutoModelForCausalLM.from_pretrained("gpt2")
+sentence = "The future of AI is" 
+input_ids = tokenizer(sentence, return_tensors='pt').input_ids  
+output_ids = gpt2.generate(input_ids, max_length=20)
+print('output_ids-> ',output_ids)
+
+# DECODIFICAR AMBOS TEXTOS
+print("Input text->", tokenizer.decode(input_ids[0]))
+generated_text = tokenizer.decode(output_ids[0], repetition_penalty=1.9, do_sample=True,top_k=5, top_p=0.94)
+print("Generated text-> ",generated_text)
+
+# ------------------- Using Pipeline ----------
+
+pipe = pipeline("text-generation", model="openai-community/gpt2", trust_remote_code=True)
+generated_text2=pipe("I went to the happy store today and bought a")
+print("Generated text2-> ",generated_text2)
 
 
 

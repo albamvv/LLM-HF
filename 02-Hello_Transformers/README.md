@@ -324,11 +324,18 @@ final logits->  tensor([-119.8218, -119.7811, -126.3039,  ..., -128.0584, -124.4
         -123.0562], grad_fn=<SelectBackward0>)
 ```
 ### 5. Determine the Most Likely Next Token
-```python
-next_token = tokenizer.decode(final_logits.argmax())
-print("Next token prediction:", next_token)
-```
 This extracts and decodes the most probable next token predicted by the model.
+
+```python
+print("Input text->", tokenizer.decode(input_ids[0]))
+next_token= tokenizer.decode(final_logits.argmax()) 
+print('next token-> ',next_token)
+```
+
+```sh
+Input text-> The future of AI is
+next token->   uncertain
+```
 
 ### 6. Generate the Top 10 Predictions
 ```python
