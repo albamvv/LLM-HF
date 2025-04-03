@@ -1,7 +1,8 @@
 from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers import pipeline
-from transformers import TrainingArguments, Trainer
+import torch
+from config import bnb_config, model, model_name, LoraConfig
 from trl import SFTTrainer
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model, AutoPeftModelForCausalLM
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -20,16 +21,14 @@ def format_prompt(example):
   chat = example['messages']
   prompt = template_tokenizer.apply_chat_template(chat, tokenize=False)
   return {'text': prompt}
+#print(format_prompt(dataset[0])['text'])
+dataset = dataset.map(format_prompt)
+#print(dataset[0])
 
-print(format_prompt(dataset[0])['text'])
-#dataset = dataset.map(format_prompt)
 
-'''
 #------------------ Testing base LLAMA Model --------------------
-# base model
-model_name = "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T"
-
-pipe = pipeline(task='text-generation', model=model_name, device='cuda')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+pipe = pipeline(task='text-generation', model=model_name, device=device)
 
 # prompt
 # <|user|>, <|assistant|>
@@ -39,47 +38,24 @@ Tell me something about Large Language Models.</s>
 <|assistant|>
 """
 
+'''
 prompt = """
 Tell me something about Large Language Models
 """
-
+'''
 output = pipe(prompt)
 print(output)
-
 #--------------------- Model configuration for training ----------
 
 # do the  4-bit quantization configuration in Q-LORA
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype='float16',
-    bnb_4bit_use_double_quant=True
-)
-
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 tokenizer.pad_token = "<PAD>"
 tokenizer.padding_size="left"
-
-model = AutoModelForCausalLM.from_pretrained(
-    model_name,
-    device_map = "auto",
-    quantization_config=bnb_config
-)
 
 model.config.use_cache=False
 model.config.pretraining_tp=1
 
 #--------------------- Prepare LoRA configuration for PEFT Fine tuning ----------
-
-peft_config = LoraConfig(
-    lora_alpha=32,
-    lora_dropout=0.1,
-    r=64,
-    bias='none',
-    task_type='CAUSAL_LM',
-    target_modules=['q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj']
-)
-
 model = prepare_model_for_kbit_training(model)
 model = get_peft_model(model, peft_config)
 
@@ -90,23 +66,6 @@ w, a, b, a+b, (a+b)/w
 
 
 #------------ Model fine tuning -----------
-
-
-output_dir = "train_dir"
-
-args = TrainingArguments(
-    output_dir=output_dir,
-    per_device_train_batch_size=2,
-    gradient_accumulation_steps=4,
-    optim="paged_adamw_32bit",
-    learning_rate=2e-4,
-    lr_scheduler_type="cosine",
-    num_train_epochs=1,
-    logging_steps=10,
-    fp16=True,
-    gradient_checkpointing=True
-)
-
 trainer = SFTTrainer(
     model=model,
     train_dataset = dataset,
@@ -116,7 +75,6 @@ trainer = SFTTrainer(
     max_seq_length=512,
     peft_config = peft_config
 )
-
 trainer.train()
 trainer.model.save_pretrained("TinyLlama-1.1B-qlora")
 
@@ -143,5 +101,4 @@ output = pipe(prompt)
 print(output[0]['generated_text'])
 
 #!zip -r tiny_llama_qlora_adapter.zip TinyLlama-1.1B-qlora
-'
-'''
+

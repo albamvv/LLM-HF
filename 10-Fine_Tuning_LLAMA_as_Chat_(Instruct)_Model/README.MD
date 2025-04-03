@@ -52,7 +52,6 @@ def format_prompt(example):
     prompt = template_tokenizer.apply_chat_template(chat, tokenize=False)
     return {'text': prompt}
 print(format_prompt(dataset[0])['text'])
-#dataset = dataset.map(format_prompt)
 ```
 ```sh
 3. Heat the vegetables in boiling water for the recommended time.</s>
@@ -72,6 +71,9 @@ I do not have information about the specific type of vegetables being referred t
 Can you add some information on how to prevent the vegetables from getting too soft or overcooked?</s>
 <|assistant|>
 Certainly, here are some tips to prevent vegetables from getting too soft or overcooked:
+```
+```python
+dataset = dataset.map(format_prompt)
 ```
 
 ### 2. Test the Base Model
